@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTAS Test</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="app">
+            <h1 id="test-title">Multidimensional Test Anxiety Scale (MTAS)</h1>
+            <p id="instructions">Please think about how you USUALLY think and feel when taking a test or exam. Try not to think for too long about each question. Read each statement and select the option that best indicates how you think or feel.</p>
+
+            <div class="age-selection">
+                <label for="age-select">Age:</label>
+                <select id="age-select">
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                </select>
+            </div>
+
+            <div id="question-section" class="question-section">
+                <div class="progress-bar">
+                    <div id="progress" class="progress"></div>
+                </div>
+                <h2 id="question-header"></h2>
+                <p id="question-text"></p>
+                <div id="options-container" class="options">
+                    <!-- Radio buttons will be generated here by JavaScript -->
+                </div>
+                <div class="navigation">
+                    <button id="prev-button" disabled>Previous</button>
+                    <button id="next-button">Next</button>
+                </div>
+            </div>
+
+            <div id="results-section" class="results-section" style="display: none;">
+                <h2>Your Results</h2>
+                <div id="subscale-scores">
+                    <!-- Subscale scores will be displayed here -->
+                </div>
+                <button id="take-again-button">Take Again</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
