@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tension: [2, 6, 10, 14],
         physiologicalIndicators: [3, 7, 11, 15],
     };
-    const answerOptions = [
+    const answerOptions = [ 
         { score: 1, label: "Strongly Disagree" },
         { score: 2, label: "Disagree" },
         { score: 3, label: "Neither agree nor disagree" },
@@ -64,6 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
             updateUIForStep(currentStep);
         } else {
             console.error("Page element not found:", pageId);
+            // As a fallback, try to log error to user if intro page is specifically missing
+            if (pageId === 'intro') {
+                alert("Error: Introduction page could not be loaded. Please check the console for details.");
+            }
         }
     };
 
@@ -78,12 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (progressBar) progressBar.style.display = isQuestionPage ? 'block' : 'none';
         
         // Navigation buttons visibility logic
-        startButton.style.display = isIntroPage ? 'block' : 'none';
-        ageNextButton.style.display = isAgePage ? 'block' : 'none';
-        genderPrevButton.style.display = isGenderPage ? 'block' : 'none';
-        genderNextButton.style.display = isGenderPage ? 'block' : 'none';
-        questionPrevButton.style.display = isQuestionPage ? 'block' : 'none';
-        takeAgainButton.style.display = isResultsPage ? 'block' : 'none';
+        if (startButton) startButton.style.display = isIntroPage ? 'block' : 'none';
+        if (ageNextButton) ageNextButton.style.display = isAgePage ? 'block' : 'none';
+        if (genderPrevButton) genderPrevButton.style.display = isGenderPage ? 'block' : 'none';
+        if (genderNextButton) genderNextButton.style.display = isGenderPage ? 'block' : 'none';
+        if (questionPrevButton) questionPrevButton.style.display = isQuestionPage ? 'block' : 'none';
+        if (takeAgainButton) takeAgainButton.style.display = isResultsPage ? 'block' : 'none';
         
         // Hide generic next button as specific ones are used
         if (nextButton) nextButton.style.display = 'none'; 
@@ -92,10 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (step === 'intro') {
             // Title and instructions are already set in HTML
         } else if (step === 'age') {
-            // Ensure age selection reflects current state
-            ageSelect.value = selectedAge;
+            if (ageSelect) ageSelect.value = selectedAge; // Ensure dropdown reflects current state
         } else if (step === 'gender') {
-            // Ensure gender selection reflects current state
             const currentGenderRadio = document.querySelector(`input[name="gender"][value="${selectedGender}"]`);
             if (currentGenderRadio) {
                 currentGenderRadio.checked = true;
@@ -110,8 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Question Handling ---
     const renderQuestion = () => {
-        if (!questionHeader || !questionText || !optionsContainer) return; // Safety check
         if (currentQuestionIndex < mtasQuestions.length) {
+            if (!questionHeader || !questionText || !optionsContainer) return; // Safety check for elements
             questionHeader.textContent = `Question ${currentQuestionIndex + 1}/${mtasQuestions.length}`;
             questionText.textContent = mtasQuestions[currentQuestionIndex].text;
             optionsContainer.innerHTML = ''; // Clear previous options
@@ -163,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (questionPrevButton) questionPrevButton.style.display = currentQuestionIndex > 0 ? 'block' : 'none';
     };
 
-    const calculateSubscaleScores = () => { // This function is kept for its subscale logic but scoreMTAS provides the final report
+    const calculateSubscaleScores = () => { // This function is kept for its current subscale logic but scoreMTAS is the main one used for reporting
         const subscaleScores = {
             worry: 0,
             cognitiveInterference: 0,
@@ -306,7 +308,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Event Listeners ---
-    // Attach listeners to specific buttons
     if (startButton) startButton.addEventListener('click', () => goToNextStep());
     if (ageNextButton) ageNextButton.addEventListener('click', () => goToNextStep());
     if (genderNextButton) genderNextButton.addEventListener('click', () => goToNextStep());
@@ -314,7 +315,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (questionPrevButton) questionPrevButton.addEventListener('click', () => goToPrevStep());
     if (takeAgainButton) takeAgainButton.addEventListener('click', resetTest);
     
-    // Listeners for dynamic parts
     if (optionsContainer) optionsContainer.addEventListener('change', handleAnswerSelect);
     if (ageSelect) ageSelect.addEventListener('change', handleAgeChange);
 
@@ -324,13 +324,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Initial Setup ---
-    // Set initial values for age and gender from HTML elements
-    // Ensure these elements exist before accessing their values
+    // Set initial values for age and gender from HTML elements if they exist
     if (ageSelect) selectedAge = parseInt(ageSelect.value, 10);
     const initialGenderRadio = document.querySelector('input[name="gender"]:checked');
     if (initialGenderRadio) selectedGender = initialGenderRadio.value || 'male';
     else selectedGender = 'male'; // Fallback if no radio is checked
-
+    
     // Show the intro page initially
     showPage('intro');
 });
