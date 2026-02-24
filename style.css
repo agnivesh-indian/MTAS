@@ -1,216 +1,374 @@
+/* General Body and App Container Styling */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f7f6;
+    background-color: #e0f7fa; /* Light Cyan background */
     color: #333;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Align to top */
+    align-items: center; /* Center vertically */
     min-height: 100vh;
     margin: 0;
-    padding-top: 20px; /* Add some padding at the top */
+    padding: 20px;
     box-sizing: border-box;
+    line-height: 1.6;
 }
 
 .app-container {
     background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     width: 100%;
     max-width: 700px;
-    margin: 20px;
+    margin: 20px auto; /* Center horizontally with auto margins */
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 30px;
+    padding: 40px; /* Increased padding */
     box-sizing: border-box;
+    text-align: center;
 }
 
 .app {
     width: 100%;
-    text-align: center;
+}
+
+/* Page Transitions / Visibility */
+.page {
+    display: none; /* Hidden by default */
+    width: 100%;
+    animation: fadeIn 0.5s ease-in-out; /* Fade-in effect */
+}
+
+.page.active {
+    display: block; /* Shown when active */
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Headings and Text */
+h1 {
+    color: #00796b; /* Teal for main title */
+    margin-bottom: 20px;
+    font-size: 2.5em;
+    letter-spacing: 0.5px;
+}
+
+h2 {
+    color: #00796b; /* Teal for section titles */
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    font-weight: 600;
+}
+
+p {
+    font-size: 1.1em;
+    color: #455a64; /* Darker grey for text */
+    margin-bottom: 30px;
+    line-height: 1.7;
+}
+
+/* Step-specific Styling */
+
+/* Introduction Page */
+#intro-page {
+    padding-top: 20px;
 }
 
 #test-title {
-    color: #2c3e50;
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 
 #instructions {
-    font-size: 1.1em;
-    color: #555;
-    margin-bottom: 25px;
-    line-height: 1.6;
+    font-size: 1.15em;
+    color: #546e7a;
+    margin-bottom: 40px;
 }
 
-.age-selection {
+/* Age & Gender Selection Pages */
+.selection-container {
     margin-bottom: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    font-size: 1.1em;
+    gap: 15px;
+    font-size: 1.15em;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
-.age-selection label {
+.selection-container label {
     font-weight: bold;
     color: #34495e;
 }
 
-.age-selection select {
-    padding: 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+select, input[type="radio"] {
+    padding: 12px 18px;
+    border: 1px solid #b0bec5; /* Lighter border */
+    border-radius: 6px;
     font-size: 1em;
-    background-color: #ecf0f1;
+    background-color: #eceff1; /* Light background for inputs */
     cursor: pointer;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.age-selection select:focus {
+select:focus, input[type="radio"]:focus {
     outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    border-color: #00796b; /* Teal focus */
+    box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.2);
 }
 
+/* Radio buttons specific styling */
+.gender-options {
+    justify-content: center;
+    gap: 20px; /* More space between gender options */
+}
+
+.gender-options label {
+    font-weight: normal; /* Less emphasis on label text */
+    color: #455a64;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.gender-options input[type="radio"] {
+    transform: scale(1.3);
+    accent-color: #00796b; /* Teal for radio button */
+}
+
+/* Question Page */
 .question-section {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #e0e0e0;
 }
 
 .progress-bar {
-    height: 10px;
-    background-color: #ecf0f1;
-    border-radius: 5px;
+    height: 12px;
+    background-color: #cfd8dc; /* Light grey */
+    border-radius: 6px;
     overflow: hidden;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .progress {
     height: 100%;
-    background-color: #3498db;
+    background-color: #4db6ac; /* Medium Cyan */
     width: 0%;
-    transition: width 0.3s ease-in-out;
+    transition: width 0.5s ease-in-out;
+    border-radius: 6px;
 }
 
 #question-header {
-    font-size: 1.3em;
-    color: #2c3e50;
-    margin-bottom: 15px;
+    font-size: 1.4em;
+    color: #00796b;
+    margin-bottom: 20px;
 }
 
 #question-text {
-    font-size: 1.15em;
-    color: #333;
-    margin-bottom: 30px;
-    line-height: 1.6;
+    font-size: 1.2em;
+    color: #37474f;
+    margin-bottom: 35px;
     text-align: left; /* Align question text to left */
+    font-weight: 500;
 }
 
 .options {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-bottom: 30px;
+    gap: 18px; /* More space between options */
+    margin-bottom: 35px;
     text-align: left;
 }
 
 .options label {
     display: flex;
     align-items: center;
-    background-color: #ecf0f1;
-    padding: 12px 20px;
-    border-radius: 5px;
+    background-color: #f8f9fa; /* Lighter background for options */
+    padding: 15px 25px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1.05em;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    border: 1px solid transparent;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    border: 1px solid #cfd8dc; /* Subtle border */
 }
 
 .options label:hover {
-    background-color: #dcdcdc;
+    background-color: #e8f5e9; /* Light green on hover */
+    border-color: #a5d6a7;
+    transform: translateY(-2px); /* Slight lift effect */
 }
 
 .options input[type="radio"] {
-    margin-right: 15px;
-    transform: scale(1.2);
-    accent-color: #3498db;
+    margin-right: 18px;
+    transform: scale(1.3);
+    accent-color: #00796b;
+    border-color: #80cbc4; /* Teal border for radio */
 }
 
-.navigation {
+/* Navigation Buttons */
+.navigation-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
-}
-
-button {
-    padding: 12px 25px;
-    font-size: 1em;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    color: white;
-}
-
-button:disabled {
-    background-color: #bdc3c7;
-    cursor: not-allowed;
-    transform: none;
-}
-
-#prev-button {
-    background-color: #95a5a6;
-}
-
-#prev-button:hover:not(:disabled) {
-    background-color: #7f8c8d;
-}
-
-#next-button {
-    background-color: #3498db;
-}
-
-#next-button:hover:not(:disabled) {
-    background-color: #2980b9;
-}
-
-#next-button:active:not(:disabled),
-#prev-button:active:not(:disabled),
-button:active:not(:disabled) {
-    transform: scale(0.98);
-}
-
-.results-section {
-    margin-top: 20px;
-    padding-top: 20px;
+    margin-top: 30px;
+    padding-top: 15px;
     border-top: 1px solid #eee;
 }
 
+button {
+    padding: 14px 30px;
+    font-size: 1.05em;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 121, 107, 0.3); /* Teal shadow */
+}
+
+button:disabled {
+    background-color: #b0bec5; /* Lighter grey for disabled */
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+#start-button,
+#next-button,
+#gender-next-button,
+#age-next-button {
+    background-color: #00796b; /* Primary Teal */
+}
+
+#start-button:hover:not(:disabled),
+#next-button:hover:not(:disabled),
+#gender-next-button:hover:not(:disabled),
+#age-next-button:hover:not(:disabled) {
+    background-color: #009688; /* Lighter Teal */
+    box-shadow: 0 6px 15px rgba(0, 121, 107, 0.4);
+}
+
+#prev-button,
+#gender-prev-button {
+    background-color: #78909c; /* Blue-grey for secondary actions */
+}
+
+#prev-button:hover:not(:disabled),
+#gender-prev-button:hover:not(:disabled) {
+    background-color: #607d8b; /* Darker Blue-grey */
+    box-shadow: 0 6px 15px rgba(117, 130, 140, 0.4);
+}
+
+button:active:not(:disabled) {
+    transform: scale(0.97); /* Slight press effect */
+    box-shadow: 0 2px 8px rgba(0, 121, 107, 0.3); /* Smaller shadow when pressed */
+}
+
+/* Results Page */
+.results-section {
+    padding-top: 30px;
+    border-top: 1px solid #e0e0e0;
+}
+
 .results-section h2 {
-    color: #2c3e50;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 #subscale-scores p {
-    font-size: 1.15em;
-    margin-bottom: 15px;
+    font-size: 1.2em;
+    margin-bottom: 18px;
     text-align: left;
-    color: #333;
+    color: #37474f;
+    display: flex;
+    justify-content: space-between; /* For alignment */
+    align-items: center;
 }
 
 #subscale-scores p strong {
-    color: #34495e;
+    color: #00796b; /* Teal for scores */
     font-weight: bold;
+    font-size: 1.3em;
+    background-color: #e0f7fa; /* Light cyan background for score */
+    padding: 5px 12px;
+    border-radius: 5px;
 }
 
 #take-again-button {
-    background-color: #2ecc71;
-    margin-top: 30px;
+    background-color: #4caf50; /* Green for restart */
+    margin-top: 40px;
 }
 
 #take-again-button:hover {
-    background-color: #27ae60;
+    background-color: #388e3c; /* Darker green */
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .app-container {
+        padding: 30px;
+        margin: 15px;
+    }
+    h1 {
+        font-size: 2em;
+    }
+    h2 {
+        font-size: 1.6em;
+    }
+    .selection-container, .gender-options {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .selection-container label, .gender-options label {
+        margin-bottom: 5px;
+    }
+    select, input[type="radio"] {
+        width: 80%; /* Make inputs wider */
+        max-width: 300px;
+        margin: 0 auto; /* Center them */
+    }
+    .options label {
+        padding: 12px 15px;
+        font-size: 1em;
+    }
+    button {
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+    .navigation-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    #prev-button, #gender-prev-button {
+        order: 2; /* Move prev button down */
+    }
+}
+
+@media (max-width: 480px) {
+    .app-container {
+        padding: 25px;
+        margin: 10px;
+    }
+    h1 {
+        font-size: 1.8em;
+    }
+    h2 {
+        font-size: 1.4em;
+    }
+    p {
+        font-size: 1em;
+    }
+    .options label {
+        font-size: 0.95em;
+        padding: 10px 15px;
+    }
+    button {
+        font-size: 0.95em;
+        padding: 10px 18px;
+    }
 }
