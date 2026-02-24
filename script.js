@@ -36,15 +36,149 @@ document.addEventListener('DOMContentLoaded', () => {
     const AUTO_ADVANCE_DELAY = 800; // milliseconds for auto-advance and flash effect
 
     // --- MTAS Data (defined globally above) ---
+    const MTAS_DATA = {
+        bayesianNorms: [
+            { "z": "-3.5", "increment": 0.1, "cumulative": 0.0 }, { "z": "-3", "increment": 0.5, "cumulative": 0.1 }, { "z": "-2.5", "increment": 1.7, "cumulative": 0.6 },
+            { "z": "-2", "increment": 4.4, "cumulative": 2.3 }, { "z": "-1.5", "increment": 9.2, "cumulative": 6.7 }, { "z": "-1", "increment": 15.0, "cumulative": 15.9 },
+            { "z": "-0.5", "increment": 19.1, "cumulative": 30.9 }, { "z": "0 (Mean)", "increment": null, "cumulative": 50.0 }, { "z": "+0.5", "increment": 19.1, "cumulative": 69.1 },
+            { "z": "+1", "increment": 15.0, "cumulative": 84.1 }, { "z": "+1.5", "increment": 9.2, "cumulative": 93.3 }, { "z": "+2", "increment": 4.4, "cumulative": 97.7 },
+            { "z": "+2.5", "increment": 1.7, "cumulative": 99.4 }, { "z": "+3", "increment": 0.5, "cumulative": 99.9 }, { "z": "+3.5", "increment": 0.1, "cumulative": 100.0 }
+        ],
+        percentile_male: [[1, 1, 1, 1, 1, 1, 1, 2], [2, 2, 1, 2, 2, 1, 1, 2], [2, 2, 1, 2, 2, 1, 2, 2], [2, 2, 2, 2, 2, 2, 2, 3], [2, 2, 2, 2, 2, 2, 2, 4], [2, 3, 4, 3, 3, 2, 2, 4], [3, 4, 4, 3, 3, 3, 3, 4], [3, 6, 5, 4, 3, 3, 3, 5], [5, 6, 5, 5, 3, 3, 4, 5], [7, 7, 5, 5, 4, 4, 4, 5], [8, 7, 7, 6, 4, 5, 5, 6], [8, 8, 7, 6, 5, 6, 5, 7], [8, 10, 7, 8, 5, 6, 6, 7], [8, 10, 7, 8, 5, 7, 7, 7], [11, 11, 9, 9, 7, 8, 7, 8], [12, 12, 10, 11, 7, 9, 9, 8], [15, 14, 11, 12, 9, 10, 9, 9], [15, 16, 11, 12, 9, 13, 12, 12], [15, 18, 13, 13, 10, 14, 13, 15], [20, 18, 14, 16, 10, 16, 15, 16], [23, 20, 16, 17, 12, 18, 16, 17], [24, 24, 20, 19, 14, 20, 20, 18], [27, 26, 24, 20, 16, 23, 21, 20], [30, 29, 25, 23, 19, 26, 22, 21], [33, 32, 28, 25, 21, 29, 24, 24], [35, 35, 32, 27, 24, 32, 26, 25], [36, 37, 35, 32, 26, 35, 28, 28], [38, 40, 41, 35, 30, 37, 30, 32], [43, 44, 43, 39, 34, 41, 33, 33], [45, 48, 45, 41, 39, 43, 37, 35], [46, 51, 46, 44, 42, 47, 40, 37], [51, 55, 49, 46, 46, 49, 44, 40], [52, 57, 54, 49, 54, 52, 49, 44], [55, 61, 59, 52, 55, 56, 53, 47], [63, 64, 63, 56, 60, 61, 55, 52], [64, 67, 67, 58, 65, 64, 58, 54], [65, 69, 71, 63, 68, 66, 62, 58], [69, 73, 75, 64, 71, 69, 65, 62], [75, 75, 79, 69, 74, 72, 69, 64], [77, 77, 82, 73, 77, 75, 72, 66], [79, 79, 84, 75, 79, 78, 75, 67], [85, 81, 87, 78, 79, 81, 77, 70], [87, 84, 88, 79, 82, 83, 81, 72], [87, 85, 90, 83, 86, 85, 83, 76], [88, 88, 90, 86, 87, 88, 85, 79], [89, 88, 91, 87, 89, 89, 86, 81], [92, 89, 93, 90, 90, 91, 88, 85], [95, 90, 95, 93, 92, 92, 90, 86], [96, 91, 95, 94, 94, 93, 92, 87], [96, 92, 96, 94, 94, 94, 93, 88], [96, 94, 97, 95, 94, 95, 94, 90], [96, 96, 97, 95, 94, 96, 94, 92], [97, 97, 98, 96, 95, 96, 95, 92], [97, 97, 98, 96, 96, 97, 96, 93], [98, 99, 99, 97, 96, 97, 96, 94], [98, 99, 99, 98, 96, 98, 97, 94], [99, 99, 99, 99, 98, 98, 98, 94], [99, 100, 100, 99, 98, 98, 98, 96], [100, 100, 100, 100, 99, 99, 99, 97], [100, 100, 100, 100, 100, 99, 99, 97], [100, 100, 100, 100, 100, 100, 99, 97], [100, 100, 100, 100, 100, 100, 100, 98], [100, 100, 100, 100, 100, 100, 100, 100], [100, 100, 100, 100, 100, 100, 100, 100]],
+
+        // Z-Scores - Male
+        zscore_male: [[-2.5, -2.43, -2.71, -2.62, -2.88, -2.65, -2.56, -2.51], [-2.41, -2.35, -2.62, -2.53, -2.79, -2.56, -2.48, -2.43], [-2.33, -2.27, -2.53, -2.44, -2.71, -2.48, -2.39, -2.36], [-2.25, -2.19, -2.44, -2.35, -2.62, -2.39, -2.31, -2.29], [-2.17, -2.11, -2.35, -2.26, -2.53, -2.31, -2.23, -2.21], [-2.09, -2.03, -2.26, -2.17, -2.44, -2.23, -2.14, -2.07], [-2.01, -1.95, -2.17, -2.09, -2.35, -2.14, -2.06, -1.99], [-1.93, -1.86, -2.08, -2.0, -2.26, -2.06, -1.98, -1.92], [-1.85, -1.78, -1.99, -1.91, -2.18, -1.97, -1.9, -1.85], [-1.77, -1.7, -1.9, -1.82, -2.09, -1.89, -1.81, -1.77], [-1.69, -1.62, -1.81, -1.73, -2.0, -1.8, -1.73, -1.7], [-1.61, -1.54, -1.72, -1.64, -1.92, -1.72, -1.64, -1.63], [-1.53, -1.46, -1.63, -1.56, -1.83, -1.63, -1.56, -1.55], [-1.45, -1.38, -1.54, -1.47, -1.74, -1.55, -1.48, -1.48], [-1.37, -1.3, -1.45, -1.38, -1.65, -1.46, -1.39, -1.41], [-1.29, -1.22, -1.36, -1.29, -1.56, -1.38, -1.31, -1.33], [-1.21, -1.14, -1.27, -1.2, -1.48, -1.29, -1.23, -1.26], [-1.13, -1.06, -1.18, -1.11, -1.39, -1.21, -1.14, -1.19], [-1.05, -0.98, -1.09, -1.03, -1.3, -1.12, -1.06, -1.19], [-0.97, -0.9, -1.0, -0.94, -1.21, -1.04, -0.98, -1.11], [-0.89, -0.81, -0.91, -0.85, -1.13, -0.96, -0.89, -1.04], [-0.81, -0.73, -0.83, -0.76, -1.04, -0.87, -0.81, -0.97], [-0.73, -0.65, -0.74, -0.67, -0.95, -0.79, -0.73, -0.89], [-0.64, -0.57, -0.65, -0.58, -0.86, -0.7, -0.64, -0.82], [-0.55, -0.51, -0.58, -0.66, -0.76, -0.63, -0.72, -0.67], [-0.48, -0.41, -0.47, -0.4, -0.69, -0.53, -0.48, -0.67], [-0.4, -0.33, -0.38, -0.31, -0.6, -0.45, -0.4, -0.6], [-0.32, -0.25, -0.29, -0.23, -0.51, -0.36, -0.31, -0.45], [-0.24, -0.17, -0.2, -0.14, -0.42, -0.28, -0.23, -0.38], [-0.16, -0.09, -0.11, -0.05, -0.34, -0.19, -0.15, -0.3], [-0.08, -0.01, -0.02, 0.04, -0.25, -0.11, -0.06, -0.23], [0, 0.07, 0.07, 0.13, -0.16, -0.02, 0.02, -0.15], [0.08, 0.15, 0.16, 0.22, 0.02, 0.06, 0.1, -0.08], [0.16, 0.23, 0.25, 0.31, 0.11, 0.15, 0.19, -0.01], [0.24, 0.31, 0.34, 0.4, 0.2, 0.23, 0.27, 0.07], [0.32, 0.39, 0.43, 0.49, 0.28, 0.32, 0.35, 0.14], [0.4, 0.47, 0.52, 0.58, 0.37, 0.4, 0.43, 0.21], [0.48, 0.55, 0.61, 0.67, 0.46, 0.49, 0.52, 0.29], [0.56, 0.63, 0.7, 0.76, 0.55, 0.57, 0.6, 0.36], [0.64, 0.71, 0.79, 0.85, 0.64, 0.65, 0.68, 0.44], [0.72, 0.79, 0.88, 0.94, 0.73, 0.74, 0.77, 0.51], [0.8, 0.87, 0.97, 1.03, 0.82, 0.82, 0.85, 0.58], [0.88, 0.95, 1.06, 1.12, 0.91, 0.91, 0.93, 0.66], [0.96, 1.03, 1.15, 1.21, 1.0, 1.0, 1.01, 0.73], [1.07, 1.09, 1.19, 0.98, 1.05, 1.05, 0.92, 0.81], [1.13, 1.2, 1.33, 1.39, 1.17, 1.17, 1.18, 0.88], [1.21, 1.28, 1.42, 1.48, 1.25, 1.25, 1.26, 0.96], [1.29, 1.36, 1.51, 1.57, 1.34, 1.34, 1.35, 1.03], [1.37, 1.44, 1.6, 1.66, 1.42, 1.42, 1.43, 1.1], [1.45, 1.52, 1.69, 1.75, 1.51, 1.51, 1.51, 1.18], [1.53, 1.6, 1.78, 1.84, 1.59, 1.59, 1.59, 1.25], [1.61, 1.68, 1.87, 1.93, 1.68, 1.68, 1.68, 1.33], [1.69, 1.76, 1.96, 2.02, 1.76, 1.76, 1.76, 1.4], [1.77, 1.84, 2.05, 2.11, 1.85, 1.85, 1.84, 1.48], [1.85, 1.92, 2.14, 2.2, 1.93, 1.93, 1.93, 1.55], [1.93, 2.0, 2.23, 2.29, 2.02, 2.02, 2.01, 1.62], [2.01, 2.08, 2.32, 2.38, 2.1, 2.1, 2.09, 1.7], [2.09, 2.16, 2.41, 2.47, 2.19, 2.19, 2.17, 1.77], [2.17, 2.24, 2.5, 2.56, 2.27, 2.27, 2.26, 1.85], [2.25, 2.32, 2.59, 2.65, 2.36, 2.36, 2.34, 1.92], [2.33, 2.41, 2.68, 2.74, 2.44, 2.44, 2.42, 1.99], [2.41, 2.49, 2.77, 2.83, 2.53, 2.53, 2.51, 2.07], [2.49, 2.57, 2.86, 2.92, 2.61, 2.61, 2.59, 2.14], [2.57, 2.65, 2.95, 3.01, 2.7, 2.7, 2.67, 2.22]],
+
+    // Helper functions
+    getRowIndex: (score) => {
+        const minScore = 16; // 16 items * min score 1
+        const maxScore = 80; // 16 items * max score 5
+        const rowIndex = score - minScore;
+        if (score < minScore || score > maxScore) {
+            console.error(`Total score ${score} out of expected range [${minScore}-${maxScore}].`);
+            return -1; // Indicate error or invalid score
+        }
+        // Ensure row index is within bounds of the table (which has 65 rows for scores 16-80)
+        // Check table length directly for robustness
+        if (rowIndex < 0 || rowIndex >= MTAS_DATA.percentile_male.length) { 
+            console.error(`Calculated row index ${rowIndex} is out of bounds for table of size ${MTAS_DATA.percentile_male.length}.`);
+            return -1;
+        }
+        return rowIndex;
+    },
+    getAgeIndex: (age) => {
+        const index = age - 11;
+        if (index < 0 || index > 7) { // Valid indices for age are 0-7 (for ages 11-18)
+            console.error("Age out of bounds:", age);
+            return -1; // Indicate error
+        }
+        return index;
+    }
+};
+
+/**
+ * SCORING LOGIC
+ */
+function scoreMTAS(age, gender, responses) {
+    // Basic validation for responses array length
+    if (!Array.isArray(responses) || responses.length !== 16) {
+        console.error("Invalid responses array. Expected 16 scores.");
+        return { error: "Invalid responses received." };
+    }
+
+    // 1. Calculate Raw Scores
+    const total = responses.reduce((a, b) => a + b, 0); // Sum of all responses (each 1-5)
+    const subscales = {
+        worry: responses[0] + responses[4] + responses[8] + responses[12],
+        interference: responses[1] + responses[5] + responses[9] + responses[13],
+        tension: responses[2] + responses[6] + responses[10] + responses[14],
+        physiological: responses[3] + responses[7] + responses[11] + responses[15]
+    };
+
+    // 2. Perform Lookup
+    const rIdx = MTAS_DATA.getRowIndex(total);
+    const aIdx = MTAS_DATA.getAgeIndex(age);
+    const isMale = gender.toLowerCase() === 'male';
+
+    // Check if indices are valid before accessing tables
+    if (rIdx === -1 || aIdx === -1) { // Check for errors from helper functions
+        return { error: "Could not determine normative metrics due to invalid input." };
+    }
+    // Ensure the specific row and column exist
+    const percentileTable = isMale ? MTAS_DATA.percentile_male : MTAS_DATA.percentile_female;
+    const zScoreTable = isMale ? MTAS_DATA.zscore_male : MTAS_DATA.zscore_female;
+
+    if (!percentileTable[rIdx] || !zScoreTable[rIdx] || !percentileTable[rIdx][aIdx] || !zScoreTable[rIdx][aIdx]) {
+        console.error(`Data lookup failed for row index ${rIdx}, age index ${aIdx}.`);
+        return { error: "Could not determine normative metrics due to missing data." };
+    }
+
+    const percentile = percentileTable[rIdx][aIdx];
+    const zScore = zScoreTable[rIdx][aIdx];
+
+    // 3. Bayesian Interpretation (Status)
+    let status = "Average";
+    // Using the z-score ranges provided by the user
+    if (zScore > 2.0) status = "Extremely High (Priority intervention)";
+    else if (zScore > 1.5) status = "Very High";
+    else if (zScore > 1.0) status = "High (Threshold for concern)";
+    else if (zScore < -1.0) status = "Low Test Anxiety";
+    // else it remains "Average"
+
+    return { total, subscales, percentile, zScore, status };
+}
+
+/**
+ * The rest of the script.js logic for UI management and event handling.
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM Elements ---
+    const introPage = document.getElementById('intro-page');
+    const ageSelectionPage = document.getElementById('age-selection-page');
+    const genderSelectionPage = document.getElementById('gender-selection-page');
+    const questionPage = document.getElementById('question-page');
+    const resultsPage = document.getElementById('results-page');
+
+    const testTitle = document.getElementById('test-title');
+    const instructions = document.getElementById('instructions');
+    const ageSelect = document.getElementById('age-select');
+    const genderRadios = document.querySelectorAll('input[name="gender"]');
+    const questionHeader = document.getElementById('question-header');
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const prevButton = document.getElementById('prev-button'); // General prev button reference
+    const nextButton = document.getElementById('next-button'); // General next button reference
+    const takeAgainButton = document.getElementById('take-again-button');
+    const startButton = document.getElementById('start-button');
+    const ageNextButton = document.getElementById('age-next-button');
+    const genderNextButton = document.getElementById('gender-next-button');
+    const genderPrevButton = document.getElementById('gender-prev-button');
+    const questionPrevButton = document.getElementById('prev-button'); // Specific button for question navigation
+    const progressBar = document.querySelector('.progress-bar');
+    const progress = document.getElementById('progress');
+    const subscaleScoresContainer = document.getElementById('subscale-scores');
+
+
+    // --- State Variables ---
+    let currentStep = 'intro'; // 'intro', 'age', 'gender', 'questions', 'results'
+    let currentQuestionIndex = 0;
+    let scores = []; // Stores score for each question (1-5)
+    let selectedAge = 11; // Default age
+    let selectedGender = 'male'; // Default gender
+    
+    const AUTO_ADVANCE_DELAY = 800; // milliseconds for auto-advance and flash effect
+
+    // --- MTAS Data (defined globally above) ---
     // const MTAS_DATA = { ... };
     // const mtasQuestions = [ ... ];
-    const subscaleItems = { 
-        worry: [0, 4, 8, 12],
-        cognitiveInterference: [1, 5, 9, 13],
-        tension: [2, 6, 10, 14],
-        physiologicalIndicators: [3, 7, 11, 15],
+    const subscaleItems = { // Extracted from MTAS_DATA and user's prompt for clarity in JS
+        worry: [0, 4, 8, 12], // Questions 1, 5, 9, 13 (0-indexed)
+        cognitiveInterference: [1, 5, 9, 13], // Questions 2, 6, 10, 14 (0-indexed)
+        tension: [2, 6, 10, 14], // Questions 3, 7, 11, 15 (0-indexed)
+        physiologicalIndicators: [3, 7, 11, 15], // Questions 4, 8, 12, 16 (0-indexed)
     };
-    const answerOptions = [ 
+    const answerOptions = [ // Defined in index.html, but good to have here for reference if needed for logic
         { score: 1, label: "Strongly Disagree" },
         { score: 2, label: "Disagree" },
         { score: 3, label: "Neither agree nor disagree" },
