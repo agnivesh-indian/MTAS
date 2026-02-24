@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentQuestionIndex = 0;
     let scores = []; // Stores score for each question (1-5)
     let selectedAge = 11; // Default age
+    let selectedGender = 'male'; // Default gender
     let showResults = false;
 
     // --- MTAS Data ---
@@ -60,6 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
         scores = Array(mtasQuestions.length).fill(0); // Default score 0, user selects 1-5
         currentQuestionIndex = 0;
         selectedAge = parseInt(ageSelect.value, 10); // Set initial age
+        // Set initial gender from checked radio button
+        selectedGender = document.querySelector('input[name="gender"]:checked')?.value || 'male';
         showResults = false;
         renderQuestion();
         updateProgressBar();
@@ -88,14 +91,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleAnswerSelect = (event) => {
         if (event.target.name === 'answer') {
             scores[currentQuestionIndex] = parseInt(event.target.value, 10);
-            // Optional: automatically advance to next question or wait for button click
-            // For now, we wait for button click to give user more control.
         }
     };
 
     const handleAgeChange = () => {
         selectedAge = parseInt(ageSelect.value, 10);
-        // Potentially use selectedAge in scoring or interpretation later
+    };
+
+    const handleGenderChange = () => {
+        selectedGender = document.querySelector('input[name="gender"]:checked').value;
     };
 
     const updateProgressBar = () => {
@@ -141,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>Tension: <strong>${calculatedScores.tension}</strong></p>
             <p>Physiological Indicators: <strong>${calculatedScores.physiologicalIndicators}</strong></p>
             <!-- Age: ${selectedAge} -->
+            <!-- Gender: ${selectedGender} -->
             <!-- Interpretation will be added here when available -->
         `;
         questionSection.style.display = 'none';
@@ -149,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const navigateToNextQuestion = () => {
         if (currentQuestionIndex < mtasQuestions.length - 1) {
-            // Basic validation: ensure an answer is selected before proceeding
             const selectedAnswer = document.querySelector('input[name="answer"]:checked');
             if (!selectedAnswer) {
                 alert('Please select an answer before continuing.');
@@ -160,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
             updateProgressBar();
             updateNavigationButtons();
         } else {
-            // Final question, show results
             const selectedAnswer = document.querySelector('input[name="answer"]:checked');
             if (!selectedAnswer) {
                 alert('Please select an answer before finishing.');
@@ -184,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scores = Array(mtasQuestions.length).fill(0); // Reset scores
         currentQuestionIndex = 0;
         selectedAge = parseInt(ageSelect.value, 10); // Reset to current dropdown value
+        selectedGender = document.querySelector('input[name="gender"]:checked').value; // Reset to current selected gender
         showResults = false;
         renderQuestion();
         updateProgressBar();
@@ -198,6 +202,12 @@ document.addEventListener('DOMContentLoaded', () => {
     prevButton.addEventListener('click', navigateToPrevQuestion);
     ageSelect.addEventListener('change', handleAgeChange);
     takeAgainButton.addEventListener('click', resetTest);
+
+    // Get gender radio buttons and add event listener
+    const genderRadios = document.querySelectorAll('input[name="gender"]');
+    genderRadios.forEach(radio => {
+        radio.addEventListener('change', handleGenderChange);
+    });
 
     // --- Initial Setup ---
     initializeTest();
