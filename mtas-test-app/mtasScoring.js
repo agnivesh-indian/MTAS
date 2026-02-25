@@ -74,5 +74,43 @@ function scoreMTAS(age, gender, responses) {
         return { error: "Gender must be 'male' or 'female'." };
     }
 
-    return { total, subscales };
-}
+    let percentile = 'N/A';
+    let zScore = 'N/A';
+
+    console.log(`--- Debugging scoreMTAS ---`);
+    console.log(`Gender: ${gender}, Age: ${age}, Total Score: ${total}`);
+    console.log(`Calculated rIdx: ${rIdx}, aIdx: ${aIdx}`);
+
+    try {
+        if (isMale) {
+            console.log(`Male Data Lookup: MTAS_DATA.percentile_male[${rIdx}] =`, MTAS_DATA.percentile_male[rIdx]);
+            console.log(`Male Data Lookup: MTAS_DATA.zscore_male[${rIdx}] =`, MTAS_DATA.zscore_male[rIdx]);
+            percentile = MTAS_DATA.percentile_male[rIdx][aIdx];
+            zScore = MTAS_DATA.zscore_male[rIdx][aIdx];
+        } else {
+            console.log(`Female Data Lookup: MTAS_DATA.percentile_female[${rIdx}] =`, MTAS_DATA.percentile_female[rIdx]);
+            console.log(`Female Data Lookup: MTAS_DATA.zscore_female[${rIdx}] =`, MTAS_DATA.zscore_female[rIdx]);
+            percentile = MTAS_DATA.percentile_female[rIdx][aIdx];
+            zScore = MTAS_DATA.zscore_female[rIdx][aIdx];
+        }
+    } catch (e) {
+        console.error("Error looking up percentile or z-score:", e);
+        // Keep as N/A
+    }
+
+
+
+    // 3. Clinical Status (Based on Bayesian sheet)
+    let status = "N/A"; // Default to N/A initially
+    if (typeof zScore === 'number') {
+        if (zScore < -1.0) status = "Low Test Anxiety (Lower than ~84% of peers). This suggests the student experiences minimal test-related anxiety, which may indicate good emotional regulation and confidence in academic settings.";
+        else if (zScore >= -1.0 && zScore <= 1.0) status = "Average Test Anxiety. The student's test anxiety levels are typical for their age group, suggesting a normal range of emotional responses to academic evaluations.";
+        else if (zScore > 1.0 && zScore <= 2.0) status = "High Test Anxiety (Top 15% of peers). This level of anxiety might interfere with optimal academic performance and could benefit from strategies to manage test-related stress.";
+        else if (zScore > 2.0) status = "Very High Test Anxiety (Top 2% of peers; prioritised for intervention). This indicates significant test anxiety, likely impacting the student's well-being and academic outcomes, and requires prompt attention or intervention."
+    }
+
+
+        return { total, subscales, percentile, zScore, status };
+
+
+    }
