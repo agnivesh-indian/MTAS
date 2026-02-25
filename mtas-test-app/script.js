@@ -348,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'intro':
                 showPage('age-selection');
                 break;
-            case 'age':
+            case 'age-selection':
                 selectedAge = parseInt(ageSelect.value, 10); 
                 showPage('gender-selection');
                 break;
