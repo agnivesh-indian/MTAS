@@ -1,50 +1,12 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // --- DOM Elements ---
-    const introPage = document.getElementById('intro-page');
-    const ageSelectionPage = document.getElementById('age-selection-page');
-    const genderSelectionPage = document.getElementById('gender-selection-page');
-    const questionPage = document.getElementById('question-page');
-    const resultsPage = document.getElementById('results-page');
-
-    const testTitle = document.getElementById('test-title');
-    const instructions = document.getElementById('instructions');
-    const ageSelect = document.getElementById('age-select');
-    const genderRadios = document.querySelectorAll('input[name="gender"]');
-    const questionHeader = document.getElementById('question-header');
-    const questionText = document.getElementById('question-text');
-    const optionsContainer = document.getElementById('options-container');
-    const prevButton = document.getElementById('prev-button'); // General prev button reference
-    const nextButton = document.getElementById('next-button'); // General next button reference
-    const takeAgainButton = document.getElementById('take-again-button');
-    const startButton = document.getElementById('start-button');
-    const ageNextButton = document.getElementById('age-next-button');
-    const genderNextButton = document.getElementById('gender-next-button');
-    const genderPrevButton = document.getElementById('gender-prev-button');
-    const questionPrevButton = document.getElementById('prev-button'); // Specific button for question navigation
-    const progressBar = document.querySelector('.progress-bar');
-    const progress = document.getElementById('progress');
-    const subscaleScoresContainer = document.getElementById('subscale-scores');
-
-
-    // --- State Variables ---
-    let currentStep = 'intro'; // 'intro', 'age', 'gender', 'questions', 'results'
-    let currentQuestionIndex = 0;
-    let scores = []; // Stores score for each question (1-5)
-    let selectedAge = 11; // Default age
-    let selectedGender = 'male'; // Default gender
-    
-    const AUTO_ADVANCE_DELAY = 800; // milliseconds for auto-advance and flash effect
-
-    // --- MTAS Data (defined globally above) ---
-    const MTAS_DATA = {
-        bayesianNorms: [
-            { "z": "-3.5", "increment": 0.1, "cumulative": 0.0 }, { "z": "-3", "increment": 0.5, "cumulative": 0.1 }, { "z": "-2.5", "increment": 1.7, "cumulative": 0.6 },
-            { "z": "-2", "increment": 4.4, "cumulative": 2.3 }, { "z": "-1.5", "increment": 9.2, "cumulative": 6.7 }, { "z": "-1", "increment": 15.0, "cumulative": 15.9 },
-            { "z": "-0.5", "increment": 19.1, "cumulative": 30.9 }, { "z": "0 (Mean)", "increment": null, "cumulative": 50.0 }, { "z": "+0.5", "increment": 19.1, "cumulative": 69.1 },
-            { "z": "+1", "increment": 15.0, "cumulative": 84.1 }, { "z": "+1.5", "increment": 9.2, "cumulative": 93.3 }, { "z": "+2", "increment": 4.4, "cumulative": 97.7 },
-            { "z": "+2.5", "increment": 1.7, "cumulative": 99.4 }, { "z": "+3", "increment": 0.5, "cumulative": 99.9 }, { "z": "+3.5", "increment": 0.1, "cumulative": 100.0 }
-        ],
-        percentile_male: [[1,1,1,1,1,1,1,2],[2,2,1,2,2,1,1,2],[2,2,1,2,2,1,2,2],[2,2,2,2,2,2,2,3],[2,2,2,2,2,2,2,4],[2,3,4,3,3,2,2,4],[3,4,4,3,3,3,3,4],[3,6,5,4,3,3,3,5],[5,6,5,5,3,3,4,5],[7,7,5,5,4,4,4,5],[8,7,7,6,4,5,5,6],[8,8,7,6,5,6,5,7],[8,10,7,8,5,6,6,7],[8,10,7,8,5,7,7,7],[11,11,9,9,7,8,7,8],[12,12,10,11,7,9,9,8],[15,14,11,12,9,10,9,9],[15,16,11,12,9,13,12,12],[15,18,13,13,10,14,13,15],[20,18,14,16,10,16,15,16],[23,20,16,17,12,18,16,17],[24,24,20,19,14,20,20,18],[27,26,24,20,16,23,21,20],[30,29,25,23,19,26,22,21],[33,32,28,25,21,29,24,24],[35,35,32,27,24,32,26,25],[36,37,35,32,26,35,28,28],[38,40,41,35,30,37,30,32],[43,44,43,39,34,41,33,33],[45,48,45,41,39,43,37,35],[46,51,46,44,42,47,40,37],[51,55,49,46,46,49,44,40],[52,57,54,49,54,52,49,44],[55,61,59,52,55,56,53,47],[63,64,63,56,60,61,55,52],[64,67,67,58,65,64,58,54],[65,69,71,63,68,66,62,58],[69,73,75,64,71,69,65,62],[75,75,79,69,74,72,69,64],[77,77,82,73,77,75,72,66],[79,79,84,75,79,78,75,67],[85,81,87,78,79,81,77,70],[87,84,88,79,82,83,81,72],[87,85,90,83,86,85,83,76],[88,88,90,86,87,88,85,79],[89,88,91,87,89,89,86,81],[92,89,93,90,90,91,88,85],[95,90,95,93,92,92,90,86],[96,91,95,94,94,93,92,87],[96,92,96,94,94,94,93,88],[96,94,97,95,94,95,94,90],[96,96,97,95,94,96,94,92],[97,97,98,96,95,96,95,92],[97,97,98,96,96,97,96,93],[98,99,99,97,96,97,96,94],[98,99,99,98,96,98,97,94],[99,99,99,99,98,98,98,94],[99,100,100,99,98,98,98,96],[100,100,100,100,99,99,99,97],[100,100,100,100,100,99,99,97],[100,100,100,100,100,100,99,97],[100,100,100,100,100,100,100,98],[100,100,100,100,100,100,100,100],[100,100,100,100,100,100,100,100]],
+const MTAS_DATA = {
+    bayesianNorms: [
+        { "z": "-3.5", "increment": 0.1, "cumulative": 0.0 }, { "z": "-3", "increment": 0.5, "cumulative": 0.1 }, { "z": "-2.5", "increment": 1.7, "cumulative": 0.6 },
+        { "z": "-2", "increment": 4.4, "cumulative": 2.3 }, { "z": "-1.5", "increment": 9.2, "cumulative": 6.7 }, { "z": "-1", "increment": 15.0, "cumulative": 15.9 },
+        { "z": "-0.5", "increment": 19.1, "cumulative": 30.9 }, { "z": "0 (Mean)", "increment": null, "cumulative": 50.0 }, { "z": "+0.5", "increment": 19.1, "cumulative": 69.1 },
+        { "z": "+1", "increment": 15.0, "cumulative": 84.1 }, { "z": "+1.5", "increment": 9.2, "cumulative": 93.3 }, { "z": "+2", "increment": 4.4, "cumulative": 97.7 },
+        { "z": "+2.5", "increment": 1.7, "cumulative": 99.4 }, { "z": "+3", "increment": 0.5, "cumulative": 99.9 }, { "z": "+3.5", "increment": 0.1, "cumulative": 100.0 }
+    ],
+    percentile_male: [[1,1,1,1,1,1,1,2],[2,2,1,2,2,1,1,2],[2,2,1,2,2,1,2,2],[2,2,2,2,2,2,2,3],[2,2,2,2,2,2,2,4],[2,3,4,3,3,2,2,4],[3,4,4,3,3,3,3,4],[3,6,5,4,3,3,3,5],[5,6,5,5,3,3,4,5],[7,7,5,5,4,4,4,5],[8,7,7,6,4,5,5,6],[8,8,7,6,5,6,5,7],[8,10,7,8,5,6,6,7],[8,10,7,8,5,7,7,7],[11,11,9,9,7,8,7,8],[12,12,10,11,7,9,9,8],[15,14,11,12,9,10,9,9],[15,16,11,12,9,13,12,12],[15,18,13,13,10,14,13,15],[20,18,14,16,10,16,15,16],[23,20,16,17,12,18,16,17],[24,24,20,19,14,20,20,18],[27,26,24,20,16,23,21,20],[30,29,25,23,19,26,22,21],[33,32,28,25,21,29,24,24],[35,35,32,27,24,32,26,25],[36,37,35,32,26,35,28,28],[38,40,41,35,30,37,30,32],[43,44,43,39,34,41,33,33],[45,48,45,41,39,43,37,35],[46,51,46,44,42,47,40,37],[51,55,49,46,46,49,44,40],[52,57,54,49,54,52,49,44],[55,61,59,52,55,56,53,47],[63,64,63,56,60,61,55,52],[64,67,67,58,65,64,58,54],[65,69,71,63,68,66,62,58],[69,73,75,64,71,69,65,62],[75,75,79,69,74,72,69,64],[77,77,82,73,77,75,72,66],[79,79,84,75,79,78,75,67],[85,81,87,78,79,81,77,70],[87,84,88,79,82,83,81,72],[87,85,90,83,86,85,83,76],[88,88,90,86,87,88,85,79],[89,88,91,87,89,89,86,81],[92,89,93,90,90,91,88,85],[95,90,95,93,92,92,90,86],[96,91,95,94,94,93,92,87],[96,92,96,94,94,94,93,88],[96,94,97,95,94,95,94,90],[96,96,97,95,94,96,94,92],[97,97,98,96,95,96,95,92],[97,97,98,96,96,97,96,93],[98,99,99,97,96,97,96,94],[98,99,99,98,96,98,97,94],[99,99,99,99,98,98,98,94],[99,100,100,99,98,98,98,96],[100,100,100,100,99,99,99,97],[100,100,100,100,100,99,99,97],[100,100,100,100,100,100,99,97],[100,100,100,100,100,100,100,98],[100,100,100,100,100,100,100,100],[100,100,100,100,100,100,100,100]],
     percentile_female: [[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1],[1,1,1,2,1,1,1,1],[2,1,1,2,1,1,1,1],[2,3,2,2,1,1,1,1],[2,3,2,2,1,1,1,1],[3,3,2,2,1,1,1,1],[3,3,2,2,1,1,1,1],[4,3,2,2,1,1,1,1],[4,3,2,3,1,1,1,1],[4,4,3,3,2,1,2,1],[4,4,4,3,2,1,2,1],[4,4,4,3,2,1,2,1],[5,4,4,4,2,1,2,1],[5,4,4,4,3,2,2,1],[5,4,5,5,3,3,3,3],[7,5,6,6,3,3,3,4],[8,5,6,6,4,4,3,4],[9,9,7,8,5,4,4,4],[12,10,8,8,6,5,4,5],[15,11,9,10,8,5,5,5],[16,12,12,11,8,7,5,7],[17,14,14,13,9,8,5,8],[22,16,16,14,11,8,6,9],[25,17,18,16,13,10,7,10],[27,21,21,18,15,11,8,12],[32,23,24,20,18,12,9,13],[34,26,27,23,21,14,12,15],[37,30,28,27,24,18,13,18],[42,35,32,32,28,21,16,21],[43,39,36,36,31,23,17,23],[46,40,39,39,32,24,19,24],[47,43,42,41,33,26,21,25],[51,47,45,43,38,29,23,28],[53,50,49,46,40,33,27,31],[55,54,53,49,44,36,31,33],[61,58,57,53,48,42,34,38],[63,61,61,56,52,45,39,41],[65,65,64,60,56,48,43,44],[69,68,67,64,60,53,47,47],[72,72,70,68,61,56,51,51],[75,76,73,71,63,60,54,54],[77,80,77,74,65,64,57,58],[79,82,81,77,69,67,62,61],[82,85,84,81,74,71,67,64],[86,87,86,83,79,74,71,68],[88,89,88,86,82,78,74,71],[90,91,91,89,86,82,78,75],[92,93,93,91,88,85,82,78],[94,94,94,92,90,87,84,81],[95,95,96,93,92,90,86,84],[96,96,96,94,93,92,89,86],[97,97,98,96,94,93,91,89],[98,98,99,97,96,95,93,92],[98,99,99,98,97,96,94,93],[99,99,99,98,98,97,96,94],[99,100,100,99,98,98,97,96],[100,100,100,99,99,98,98,97],[100,100,100,99,99,99,98,98],[100,100,100,100,99,99,99,99],[100,100,100,100,100,99,99,99],[100,100,100,100,100,100,100,100],[100,100,100,100,100,100,100,100]],
 
     // Z-Scores - Male
@@ -126,9 +88,21 @@ function scoreMTAS(age, gender, responses) {
     return { total, subscales, percentile, zScore, status };
 }
 
-/**
- * The rest of the script.js logic for UI management and event handling.
- */
+// Global declarations for answer options and subscales
+const answerOptions = [
+    { label: "Never", score: 1 },
+    { label: "Rarely", score: 2 },
+    { label: "Sometimes", score: 3 },
+    { label: "Often", score: 4 },
+    { label: "Always", score: 5 }
+];
+
+const subscaleItems = {
+    worry: [0, 4, 8, 12], // Indices of questions corresponding to 'worry' subscale
+    cognitiveInterference: [1, 5, 9, 13], // Indices of questions corresponding to 'cognitive interference' subscale
+    tension: [2, 6, 10, 14], // Indices of questions corresponding to 'tension' subscale
+    physiologicalIndicators: [3, 7, 11, 15] // Indices of questions corresponding to 'physiological indicators' subscale
+};
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- DOM Elements ---
@@ -145,33 +119,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionHeader = document.getElementById('question-header');
     const questionText = document.getElementById('question-text');
     const optionsContainer = document.getElementById('options-container');
-    const prevButton = document.getElementById('prev-button'); // General prev button reference
-    const nextButton = document.getElementById('next-button'); // General next button reference
     const takeAgainButton = document.getElementById('take-again-button');
     const startButton = document.getElementById('start-button');
     const ageNextButton = document.getElementById('age-next-button');
     const genderNextButton = document.getElementById('gender-next-button');
     const genderPrevButton = document.getElementById('gender-prev-button');
-    const questionPrevButton = document.getElementById('prev-button'); // Specific button for question navigation
+    const questionPrevButton = document.getElementById('question-prev-button'); // Ensure this refers to the specific question prev button
     const progressBar = document.querySelector('.progress-bar');
     const progress = document.getElementById('progress');
     const subscaleScoresContainer = document.getElementById('subscale-scores');
-
 
     // --- State Variables ---
     let currentStep = 'intro'; // 'intro', 'age', 'gender', 'questions', 'results'
     let currentQuestionIndex = 0;
     let scores = []; // Stores score for each question (1-5)
-    let selectedAge = 11; // Default age
-    let selectedGender = 'male'; // Default gender
+    let selectedAge = parseInt(ageSelect.value, 10) || 11; // Default age, ensure it's parsed as number
+    let selectedGender = document.querySelector('input[name="gender"]:checked')?.value || 'male'; // Default gender
     
     const AUTO_ADVANCE_DELAY = 800; // milliseconds for auto-advance and flash effect
-
-    // --- MTAS Data (defined globally above) ---
-    // const MTAS_DATA = { ... };
-    // const mtasQuestions = [ ... ];
-    // const subscaleItems = { ... }; // Defined earlier in the script for clarity
-    // const answerOptions = [ ... ]; // Defined earlier for reference
 
     // --- Page Management ---
     const showPage = (pageId) => {
@@ -185,8 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateUIForStep(currentStep);
         } else {
             console.error("Page element not found:", pageId);
-            // As a fallback, try to log error to user if intro page is specifically missing
-            if (pageId === 'intro-page') { // Corrected to check for the full ID
+            if (pageId === 'intro-page') { 
                 alert("Error: Introduction page could not be loaded. Please check the console for details.");
             }
         }
@@ -210,14 +174,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (questionPrevButton) questionPrevButton.style.display = isQuestionPage ? 'block' : 'none';
         if (takeAgainButton) takeAgainButton.style.display = isResultsPage ? 'block' : 'none';
         
-        // Hide generic next button as specific ones are used
-        if (nextButton) nextButton.style.display = 'none'; 
-
         // Specific element updates per step
         if (step === 'intro') {
             // Title and instructions are already set in HTML
         } else if (step === 'age') {
-            if (ageSelect) ageSelect.value = selectedAge; // Ensure dropdown reflects current state
+            if (ageSelect) ageSelect.value = selectedAge; 
         } else if (step === 'gender') {
             const currentGenderRadio = document.querySelector(`input[name="gender"][value="${selectedGender}"]`);
             if (currentGenderRadio) {
@@ -234,10 +195,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Question Handling ---
     const renderQuestion = () => {
         if (currentQuestionIndex < mtasQuestions.length) {
-            if (!questionHeader || !questionText || !optionsContainer) return; // Safety check for elements
+            if (!questionHeader || !questionText || !optionsContainer) return; 
             questionHeader.textContent = `Question ${currentQuestionIndex + 1}/${mtasQuestions.length}`;
             questionText.textContent = mtasQuestions[currentQuestionIndex].text;
-            optionsContainer.innerHTML = ''; // Clear previous options
+            optionsContainer.innerHTML = ''; 
 
             answerOptions.forEach(option => {
                 const label = document.createElement('label');
@@ -254,13 +215,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleAnswerSelect = (event) => {
         if (event.target.name === 'answer') {
             scores[currentQuestionIndex] = parseInt(event.target.value, 10);
-            // Visual feedback for selection
             optionsContainer.querySelectorAll('.option-label').forEach(lbl => {
-                lbl.style.backgroundColor = '#f8f9fa'; // Reset background
+                lbl.style.backgroundColor = '#f8f9fa'; 
             });
-            event.target.closest('.option-label').style.backgroundColor = '#e8f5e9'; // Highlight selected
+            event.target.closest('.option-label').style.backgroundColor = '#e8f5e9'; 
 
-            // Auto-advance to the next question after a short delay
             setTimeout(() => {
                 advanceToNextQuestionOrResult();
             }, AUTO_ADVANCE_DELAY);
@@ -282,11 +241,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateNavigationButtons = () => {
-        // For question page, prev button is always shown if not first question
         if (questionPrevButton) questionPrevButton.style.display = currentQuestionIndex > 0 ? 'block' : 'none';
     };
 
-    const calculateSubscaleScores = () => { // This function is kept for its current subscale logic but scoreMTAS is the main one used for reporting
+    const calculateSubscaleScores = () => { 
         const subscaleScores = {
             worry: 0,
             cognitiveInterference: 0,
@@ -295,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         subscaleItems.worry.forEach(index => {
-            subscaleScores.worry += scores[index] || 0; // Ensure score is number, default to 0 if undefined
+            subscaleScores.worry += scores[index] || 0;
         });
         subscaleItems.cognitiveInterference.forEach(index => {
             subscaleScores.cognitiveInterference += scores[index] || 0;
@@ -311,7 +269,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const renderResults = () => {
-        // Call the provided scoreMTAS function
         const scoringResult = scoreMTAS(selectedAge, selectedGender, scores);
         
         if (scoringResult.error) {
@@ -322,7 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const { total, subscales, percentile, zScore, status } = scoringResult;
 
-        // Format the output as requested
         subscaleScoresContainer.innerHTML = `
             <p>Worry: <strong>${subscales.worry}</strong></p>
             <p>Cognitive Interference: <strong>${subscales.interference}</strong></p>
@@ -347,7 +303,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderQuestion();
                 updateProgressBar();
                 updateNavigationButtons();
-                // Visual flash effect on question text area
                 questionText.style.transition = 'none';
                 questionText.style.opacity = '0.7';
                 setTimeout(() => {
@@ -355,13 +310,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     questionText.style.opacity = '1';
                 }, 50);
             } else {
-                // All questions answered, show results
-                showResults = true;
+                showResults = true; // This variable is not defined, will be removed later.
                 renderResults();
             }
         } else {
-            // If not on question page, this function shouldn't be called directly,
-            // but as a safeguard, we can just move to next step if available.
             goToNextStep();
         }
     };
@@ -374,11 +326,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderQuestion();
                     updateProgressBar();
                     updateNavigationButtons();
-                    // Reset visual feedback and ensure options are visible again
                     optionsContainer.querySelectorAll('.option-label').forEach(lbl => {
                         lbl.style.backgroundColor = '#f8f9fa'; 
                     });
-                } else { // If at the first question, go back to gender selection
+                } else { 
                     showPage('gender-selection');
                 }
                 break;
@@ -388,7 +339,6 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'age':
                 showPage('intro');
                 break;
-            // No 'prev' from intro or results
         }
     };
 
@@ -398,33 +348,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 showPage('age-selection');
                 break;
             case 'age':
-                selectedAge = parseInt(ageSelect.value, 10); // Capture age before moving
+                selectedAge = parseInt(ageSelect.value, 10); 
                 showPage('gender-selection');
                 break;
             case 'gender':
-                selectedGender = document.querySelector('input[name="gender"]:checked')?.value || 'male'; // Capture gender
-                // Reset question state before starting questions
+                selectedGender = document.querySelector('input[name="gender"]:checked')?.value || 'male'; 
                 currentQuestionIndex = 0;
-                scores = Array(mtasQuestions.length).fill(0); // Reset scores for new test attempt
+                scores = Array(mtasQuestions.length).fill(0); 
                 renderQuestion();
                 updateProgressBar();
                 updateNavigationButtons();
                 showPage('question');
                 break;
-            // For question page, advancement is handled by handleAnswerSelect and advanceToNextQuestionOrResult
-            // For results page, 'Take Test Again' button is used
         }
     };
 
     const resetTest = () => {
-        // Reset all state variables
-        scores = Array(mtasQuestions.length).fill(0); // Reset scores
+        scores = Array(mtasQuestions.length).fill(0); 
         currentQuestionIndex = 0;
-        selectedAge = parseInt(ageSelect.value, 10); // Reset to current dropdown value
-        selectedGender = document.querySelector('input[name="gender"]:checked')?.value || 'male'; // Reset gender to current selection
-        showResults = false;
+        selectedAge = parseInt(ageSelect.value, 10); 
+        selectedGender = document.querySelector('input[name="gender"]:checked')?.value || 'male'; 
+        // showResults = false; // This variable is not defined, will be removed later.
         
-        // Go back to intro page to restart
         showPage('intro');
     };
 
@@ -439,18 +384,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (optionsContainer) optionsContainer.addEventListener('change', handleAnswerSelect);
     if (ageSelect) ageSelect.addEventListener('change', handleAgeChange);
 
-    // Add listener for gender radios
     genderRadios.forEach(radio => {
         radio.addEventListener('change', handleGenderChange);
     });
 
     // --- Initial Setup ---
-    // Set initial values for age and gender from HTML elements if they exist
     if (ageSelect) selectedAge = parseInt(ageSelect.value, 10);
     const initialGenderRadio = document.querySelector('input[name="gender"]:checked');
     if (initialGenderRadio) selectedGender = initialGenderRadio.value || 'male';
-    else selectedGender = 'male'; // Fallback if no radio is checked
+    else selectedGender = 'male'; 
     
-    // Show the intro page initially
     showPage('intro');
 });
