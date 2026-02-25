@@ -1,3 +1,5 @@
+import { questions } from './src/questions.js';
+
 const MTAS_DATA = {
     bayesianNorms: [
         { "z": "-3.5", "increment": 0.1, "cumulative": 0.0 }, { "z": "-3", "increment": 0.5, "cumulative": 0.1 }, { "z": "-2.5", "increment": 1.7, "cumulative": 0.6 },
@@ -181,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (step === 'age') {
             if (ageSelect) ageSelect.value = selectedAge; 
         } else if (step === 'gender') {
-            const currentGenderRadio = document.querySelector(`input[name="gender"][value="${selectedGender}"]`);
+            const currentGenderRadio = document.querySelector(`input[name="gender"]:checked`);
             if (currentGenderRadio) {
                 currentGenderRadio.checked = true;
             }
@@ -195,10 +197,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Question Handling ---
     const renderQuestion = () => {
-        if (currentQuestionIndex < mtasQuestions.length) {
+        if (currentQuestionIndex < questions.length) {
             if (!questionHeader || !questionText || !optionsContainer) return; 
-            questionHeader.textContent = `Question ${currentQuestionIndex + 1}/${mtasQuestions.length}`;
-            questionText.textContent = mtasQuestions[currentQuestionIndex].text;
+            questionHeader.textContent = `Question ${currentQuestionIndex + 1}/${questions.length}`;
+            questionText.textContent = questions[currentQuestionIndex].text;
             optionsContainer.innerHTML = ''; 
 
             answerOptions.forEach(option => {
@@ -237,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateProgressBar = () => {
         if (!progress) return;
-        const progressPercentage = ((currentQuestionIndex + 1) / mtasQuestions.length) * 100;
+        const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
         progress.style.width = `${progressPercentage}%`;
     };
 
@@ -299,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const advanceToNextQuestionOrResult = () => {
         if (currentStep === 'questions') {
-            if (currentQuestionIndex < mtasQuestions.length - 1) {
+            if (currentQuestionIndex < questions.length - 1) {
                 currentQuestionIndex++;
                 renderQuestion();
                 updateProgressBar();
@@ -311,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     questionText.style.opacity = '1';
                 }, 50);
             } else {
-                showResults = true; // This variable is not defined, will be removed later.
+                // showResults is not defined, removed this line.
                 renderResults();
             }
         } else {
@@ -337,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'gender':
                 showPage('age-selection');
                 break;
-            case 'age':
+            case 'age-selection': // Corrected from 'age'
                 showPage('intro');
                 break;
         }
@@ -348,14 +350,14 @@ document.addEventListener('DOMContentLoaded', () => {
             case 'intro':
                 showPage('age-selection');
                 break;
-            case 'age-selection':
+            case 'age-selection': // Corrected from 'age'
                 selectedAge = parseInt(ageSelect.value, 10); 
                 showPage('gender-selection');
                 break;
             case 'gender':
                 selectedGender = document.querySelector('input[name="gender"]:checked')?.value || 'male'; 
                 currentQuestionIndex = 0;
-                scores = Array(mtasQuestions.length).fill(0); 
+                scores = Array(questions.length).fill(0); 
                 renderQuestion();
                 updateProgressBar();
                 updateNavigationButtons();
@@ -365,11 +367,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const resetTest = () => {
-        scores = Array(mtasQuestions.length).fill(0); 
+        scores = Array(questions.length).fill(0); 
         currentQuestionIndex = 0;
         selectedAge = parseInt(ageSelect.value, 10); 
         selectedGender = document.querySelector('input[name="gender"]:checked')?.value || 'male'; 
-        // showResults = false; // This variable is not defined, will be removed later.
+        // showResults is not defined, removed this line.
         
         showPage('intro');
     };

@@ -143,14 +143,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.page').forEach(page => {
             page.classList.remove('active');
         });
-        const pageToShow = document.getElementById(pageId);
+        const fullPageId = pageId.endsWith('-page') ? pageId : `${pageId}-page`; // Add this line
+        const pageToShow = document.getElementById(fullPageId); // Use fullPageId here
         if (pageToShow) {
             pageToShow.classList.add('active');
-            currentStep = pageId.replace('-page', ''); // Update current step state
+            currentStep = pageId.replace('-page', ''); 
             updateUIForStep(currentStep);
         } else {
-            console.error("Page element not found:", pageId);
-            if (pageId === 'intro-page') { 
+            console.error("Page element not found:", fullPageId); // Log fullPageId
+            if (fullPageId === 'intro-page') { 
                 alert("Error: Introduction page could not be loaded. Please check the console for details.");
             }
         }

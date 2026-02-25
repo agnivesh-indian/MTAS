@@ -300,15 +300,6 @@ button:disabled {
 .status-extremely-high { color: #d32f2f; } /* Red */
 .status-low { color: #1976d2; } /* Blue */
 
-/* Profile data */
-.profile-data {
-    font-size: 1.1em;
-    color: #546e7a;
-    margin: 25px 0;
-    font-style: italic;
-    text-align: center;
-}
-
 /* General button styling */
 #start-button, #age-next-button, #gender-next-button, #take-again-button {
     background-color: #4CAF50; /* Green */
