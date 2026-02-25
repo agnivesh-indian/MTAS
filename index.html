@@ -4,242 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multidimensional Test Anxiety Scale (MTAS)</title>
-    <style>
-        :root {
-            --primary-color: #4a90e2;
-            --bg-color: #f4f7f6;
-            --container-bg: #ffffff;
-            --text-color: #333;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: var(--container-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            max-width: 600px;
-            width: 100%;
-        }
-
-        .heading {
-            text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 30px;
-        }
-
-        .page { transition: all 0.3s ease; }
-        .hidden { display: none; }
-
-        .button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-top: 20px;
-        }
-
-        .button:hover { opacity: 0.9; }
-
-        /* Results Table */
-        .results-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        .results-table th, .results-table td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-
-        .results-table th { background-color: #f8f9fa; }
-
-        /* --- SCORE SLIDER STYLES --- */
-        .score-visualizer {
-            margin: 40px auto;
-            padding: 0 10px;
-        }
-
-        .slider-labels {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .slider-track {
-            position: relative;
-            height: 16px;
-            background: linear-gradient(to right, #4caf50 0%, #ffeb3b 50%, #f44336 100%);
-            border-radius: 10px;
-        }
-
-        .score-pointer {
-            position: absolute;
-            top: -8px;
-            left: 0%; /* Adjusted via JS */
-            width: 4px;
-            height: 32px;
-            background: #222;
-            transition: left 1s cubic-bezier(0.23, 1, 0.32, 1);
-            z-index: 2;
-        }
-
-        .score-pointer::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -6px;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 10px solid #222;
-        }
-
-        .pointer-bubble {
-            position: absolute;
-            bottom: -35px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #222;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-        }
-
-        .disclaimer {
-            font-size: 0.8rem;
-            color: #777;
-            margin-top: 30px;
-            line-height: 1.4;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
+        <h1 class="heading">Multidimensional Test Anxiety Scale (MTAS)</h1>
+        
+        <div id="instruction-page" class="page">
+            <p>Please think about how you USUALLY think and feel when taking a test or exam. Try not to think for too long about each question. Read each statement and select the option that best indicates how you think or feel.</p>
+            <button id="start-test" class="button">Start Test</button>
+        </div>
 
-<div class="container">
-    <h1 class="heading">Multidimensional Test Anxiety Scale (MTAS)</h1>
-
-    <div id="instruction-page" class="page">
-        <p>Please think about how you USUALLY think and feel when taking a test or exam. Read each statement and select the option that best indicates how you feel.</p>
-        <button id="start-test" class="button">Start Test</button>
-    </div>
-
-    <div id="results-page" class="page hidden">
-        <h2>Your Results</h2>
-
-        <div class="score-visualizer">
-            <div class="slider-labels">
-                <span>Low Anxiety</span>
-                <span>Moderate</span>
-                <span>High Anxiety</span>
+        <div id="age-page" class="page hidden">
+            <h2>Select Your Age</h2>
+            <div class="age-selection">
+                <label for="age-select">Age:</label>
+                <select id="age-select" class="select-field">
+                    </select>
             </div>
-            <div class="slider-track">
-                <div id="score-pointer" class="score-pointer">
-                    <div class="pointer-bubble">Score: <span id="bubble-score">0</span></div>
+            <div class="navigation-buttons">
+                <button id="prev-age" class="button prev-button">Previous</button>
+                <button id="next-age" class="button next-button">Next</button>
+            </div>
+        </div>
+
+        <div id="gender-page" class="page hidden">
+            <h2>Select Your Gender</h2>
+            <div class="gender-selection">
+                <label class="radio-label">
+                    <input type="radio" name="gender" value="male" class="radio-input"> Male
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="gender" value="female" class="radio-input"> Female
+                </label>
+            </div>
+            <div class="navigation-buttons">
+                <button id="prev-gender" class="button prev-button">Previous</button>
+                <button id="next-gender" class="button next-button">Next</button>
+            </div>
+        </div>
+
+        <div id="question-page" class="page hidden">
+            <h2 id="question-number">Question X of 16</h2>
+            <p id="question-text"></p>
+            <div id="answer-options" class="answer-options">
+                </div>
+            <div class="navigation-buttons">
+                <button id="prev-question" class="button prev-button">Previous</button>
+            </div>
+        </div>
+
+        <div id="results-page" class="page hidden">
+            <h2>Test Results</h2>
+
+            <div class="score-visualizer">
+                <div class="slider-labels">
+                    <span>Low Anxiety</span>
+                    <span>Moderate</span>
+                    <span>High Anxiety</span>
+                </div>
+                <div class="slider-track">
+                    <div id="score-pointer" class="score-pointer">
+                        <div class="pointer-bubble"><span id="bubble-score">0</span></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="scores-table-container">
-            <table class="results-table">
-                <thead>
-                    <tr>
-                        <th>Metric</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Total Test Anxiety Score</strong></td>
-                        <td id="total-score" style="font-weight: bold; color: #4a90e2;"></td>
-                    </tr>
-                    <tr>
-                        <td>Worry Subscale</td>
-                        <td id="worry-score"></td>
-                    </tr>
-                    <tr>
-                        <td>Cognitive Interference Subscale</td>
-                        <td id="cognitive-interference-score"></td>
-                    </tr>
-                    <tr>
-                        <td>Tension Subscale</td>
-                        <td id="tension-score"></td>
-                    </tr>
-                    <tr>
-                        <td>Physiological Indicators Subscale</td>
-                        <td id="physiological-indicators-score"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <button id="restart-test" class="button">Restart Test</button>
-        <div class="disclaimer">
-            <p><strong>Disclaimer:</strong> This tool is for informational purposes only. The results are based on self-reported data and are not intended to be a clinical diagnosis.</p>
+            <div id="scores-table-container">
+                <table id="scores-table" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Test Anxiety Score</td>
+                            <td id="total-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Worry Subscale</td>
+                            <td id="worry-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Cognitive Interference Subscale</td>
+                            <td id="cognitive-interference-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Tension Subscale</td>
+                            <td id="tension-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Physiological Indicators Subscale</td>
+                            <td id="physiological-indicators-score"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <button id="restart-test" class="button">Restart Test</button>
+            
+            <div class="disclaimer">
+                <p><strong>Disclaimer:</strong> This tool is for informational and educational purposes only and should not be considered a substitute for professional clinical advice or diagnosis. The results provided are based on self-reported data and are not intended to be a clinical diagnosis of test anxiety. If you have concerns about test anxiety or your mental health, please consult with a qualified healthcare professional, psychologist, or counselor.</p>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    // Logic for demonstration: Mocking the completion of the test
-    const startBtn = document.getElementById('start-test');
-    const restartBtn = document.getElementById('restart-test');
-    const instructionPage = document.getElementById('instruction-page');
-    const resultsPage = document.getElementById('results-page');
-
-    startBtn.addEventListener('click', () => {
-        // In your real app, this would trigger after the 16th question
-        showResults(55); // Example Score out of 80
-    });
-
-    restartBtn.addEventListener('click', () => {
-        resultsPage.classList.add('hidden');
-        instructionPage.classList.remove('hidden');
-    });
-
-    function showResults(totalScore) {
-        instructionPage.classList.add('hidden');
-        resultsPage.classList.remove('hidden');
-
-        // Update Table
-        document.getElementById('total-score').innerText = totalScore;
-        document.getElementById('worry-score').innerText = "15"; // Mock data
-        document.getElementById('cognitive-interference-score').innerText = "10"; // Mock data
-        document.getElementById('tension-score').innerText = "15"; // Mock data
-        document.getElementById('physiological-indicators-score').innerText = "15"; // Mock data
-
-        // --- Update Slider ---
-        const maxScore = 80;
-        const percentage = (totalScore / maxScore) * 100;
-        
-        const pointer = document.getElementById('score-pointer');
-        const bubbleScore = document.getElementById('bubble-score');
-
-        // Allow a small timeout so the transition animation is visible
-        setTimeout(() => {
-            pointer.style.left = percentage + "%";
-            bubbleScore.innerText = totalScore;
-        }, 100);
-    }
-</script>
-
+    <script src="mtasScoring.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
