@@ -45,6 +45,11 @@ const MTAS_DATA = {
     }
 };
 
+console.log('MTAS_DATA.percentile_male length:', MTAS_DATA.percentile_male.length);
+console.log('MTAS_DATA.zscore_male length:', MTAS_DATA.zscore_male.length);
+console.log('MTAS_DATA.percentile_female length:', MTAS_DATA.percentile_female.length);
+console.log('MTAS_DATA.zscore_female length:', MTAS_DATA.zscore_female.length);
+
 /**
  * SCORING LOGIC
  */
@@ -77,26 +82,41 @@ function scoreMTAS(age, gender, responses) {
     let percentile = 'N/A';
     let zScore = 'N/A';
 
-    console.log(`--- Debugging scoreMTAS ---`);
+    console.log(`--- Debugging scoreMTAS Execution ---`);
     console.log(`Gender: ${gender}, Age: ${age}, Total Score: ${total}`);
     console.log(`Calculated rIdx: ${rIdx}, aIdx: ${aIdx}`);
 
     try {
         if (isMale) {
-            console.log(`Male Data Lookup: MTAS_DATA.percentile_male[${rIdx}] =`, MTAS_DATA.percentile_male[rIdx]);
-            console.log(`Male Data Lookup: MTAS_DATA.zscore_male[${rIdx}] =`, MTAS_DATA.zscore_male[rIdx]);
-            percentile = MTAS_DATA.percentile_male[rIdx][aIdx];
-            zScore = MTAS_DATA.zscore_male[rIdx][aIdx];
+            const malePercentileRow = MTAS_DATA.percentile_male[rIdx];
+            const maleZscoreRow = MTAS_DATA.zscore_male[rIdx];
+            console.log(`Male Lookup - percentile_male[${rIdx}]:`, malePercentileRow);
+            console.log(`Male Lookup - zscore_male[${rIdx}]:`, maleZscoreRow);
+
+            if (malePercentileRow && maleZscoreRow) {
+                 percentile = malePercentileRow[aIdx];
+                 zScore = maleZscoreRow[aIdx];
+            } else {
+                 console.warn(`Male Lookup - Data row for rIdx ${rIdx} is undefined or null.`);
+            }
         } else {
-            console.log(`Female Data Lookup: MTAS_DATA.percentile_female[${rIdx}] =`, MTAS_DATA.percentile_female[rIdx]);
-            console.log(`Female Data Lookup: MTAS_DATA.zscore_female[${rIdx}] =`, MTAS_DATA.zscore_female[rIdx]);
-            percentile = MTAS_DATA.percentile_female[rIdx][aIdx];
-            zScore = MTAS_DATA.zscore_female[rIdx][aIdx];
+            const femalePercentileRow = MTAS_DATA.percentile_female[rIdx];
+            const femaleZscoreRow = MTAS_DATA.zscore_female[rIdx];
+            console.log(`Female Lookup - percentile_female[${rIdx}]:`, femalePercentileRow);
+            console.log(`Female Lookup - zscore_female[${rIdx}]:`, femaleZscoreRow);
+
+            if (femalePercentileRow && femaleZscoreRow) {
+                 percentile = femalePercentileRow[aIdx];
+                 zScore = femaleZscoreRow[aIdx];
+            } else {
+                 console.warn(`Female Lookup - Data row for rIdx ${rIdx} is undefined or null.`);
+            }
         }
     } catch (e) {
         console.error("Error looking up percentile or z-score:", e);
         // Keep as N/A
     }
+
 
 
 
