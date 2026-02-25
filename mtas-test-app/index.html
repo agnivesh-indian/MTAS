@@ -3,83 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MTAS Test</title>
+    <title>Multidimensional Test Anxiety Scale (MTAS)</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="app-container">
-        <div class="app">
+    <div class="container">
+        <h1 class="heading">Multidimensional Test Anxiety Scale (MTAS)</h1>
+        <div id="instruction-page" class="page">
+            <p>Please think about how you USUALLY think and feel when taking a test or exam. Try not to think for too long about each question. Read each statement and select the option that best indicates how you think or feel.</p>
+            <button id="start-test" class="button">Start Test</button>
+        </div>
 
-            <!-- Introduction Page -->
-            <section id="intro-page" class="page active">
-                <h1 id="test-title">Multidimensional Test Anxiety Scale (MTAS)</h1>
-                <p id="instructions">Please think about how you USUALLY think and feel when taking a test or exam. Try not to think for too long about each question. Read each statement and select the option that best indicates how you think or feel.</p>
-                <button id="start-button">Start Test</button>
-            </section>
+        <div id="age-page" class="page hidden">
+            <h2>Select Your Age</h2>
+            <div class="age-selection">
+                <label for="age-select">Age:</label>
+                <select id="age-select" class="select-field">
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
+            <div class="navigation-buttons">
+                <button id="prev-age" class="button prev-button">Previous</button>
+                <button id="next-age" class="button next-button">Next</button>
+            </div>
+        </div>
 
-            <!-- Age Selection Page -->
-            <section id="age-selection-page" class="page">
-                <h2>Step 1: Select Your Age</h2>
-                <div class="selection-container">
-                    <label for="age-select">Age:</label>
-                    <select id="age-select">
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                    </select>
-                </div>
-                <div class="navigation-buttons">
-                    <button id="age-next-button">Next</button>
-                </div>
-            </section>
+        <div id="gender-page" class="page hidden">
+            <h2>Select Your Gender</h2>
+            <div class="gender-selection">
+                <label class="radio-label">
+                    <input type="radio" name="gender" value="male" class="radio-input"> Male
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="gender" value="female" class="radio-input"> Female
+                </label>
+            </div>
+            <div class="navigation-buttons">
+                <button id="prev-gender" class="button prev-button">Previous</button>
+                <button id="next-gender" class="button next-button">Next</button>
+            </div>
+        </div>
 
-            <!-- Gender Selection Page -->
-            <section id="gender-selection-page" class="page">
-                <h2>Step 2: Select Your Gender</h2>
-                <div class="selection-container gender-options">
-                    <label>Gender:</label>
-                    <label><input type="radio" name="gender" value="male" checked> Male</label>
-                    <label><input type="radio" name="gender" value="female"> Female</label>
-                </div>
-                <div class="navigation-buttons">
-                    <button id="gender-prev-button">Previous</button>
-                    <button id="gender-next-button">Next</button>
-                </div>
-            </section>
+        <div id="question-page" class="page hidden">
+            <h2 id="question-number">Question X of 16</h2>
+            <p id="question-text"></p>
+            <div id="answer-options" class="answer-options">
+                <!-- Answer options will be populated by JavaScript -->
+            </div>
+            <div class="navigation-buttons">
+                <button id="prev-question" class="button prev-button">Previous</button>
+            </div>
+        </div>
 
-            <!-- Question Page -->
-            <section id="question-page" class="page">
-                <div class="progress-bar">
-                    <div id="progress" class="progress"></div>
-                </div>
-                <h2 id="question-header"></h2>
-                <p id="question-text"></p>
-                <div id="options-container" class="options">
-                    <!-- Radio buttons will be generated here by JavaScript -->
-                </div>
-                <div class="navigation-buttons">
-                    <button id="question-prev-button">Previous</button>
-                    <!-- No explicit 'Next' button here for auto-advance -->
-                </div>
-            </section>
+        <div id="results-page" class="page hidden">
+            <h2>Test Results</h2>
+            <div id="scores-table-container">
+                <table id="scores-table" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Test Anxiety Score</td>
+                            <td id="total-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Worry Subscale</td>
+                            <td id="worry-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Cognitive Interference Subscale</td>
+                            <td id="cognitive-interference-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Tension Subscale</td>
+                            <td id="tension-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Physiological Indicators Subscale</td>
+                            <td id="physiological-indicators-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Percentile Rank</td>
+                            <td id="percentile-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Z-Score</td>
+                            <td id="z-score"></td>
+                        </tr>
 
-            <!-- Results Page -->
-            <section id="results-page" class="page">
-                <h2>Your Results</h2>
-                <div id="subscale-scores">
-                    <!-- Subscale scores will be displayed here -->
-                </div>
-                <button id="take-again-button">Take Test Again</button>
-            </section>
-
+                    </tbody>
+                </table>
+            </div>
+            <button id="restart-test" class="button">Restart Test</button>
+            <div class="disclaimer">
+                <p><strong>Disclaimer:</strong> This tool is for informational and educational purposes only and should not be considered a substitute for professional clinical advice or diagnosis. The results provided are based on self-reported data and are not intended to be a clinical diagnosis of test anxiety. If you have concerns about test anxiety or your mental health, please consult with a qualified healthcare professional, psychologist, or counselor.</p>
+            </div>
         </div>
     </div>
-    <script src="./src/questions.js"></script>
+
+    <script src="mtasScoring.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
