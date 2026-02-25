@@ -12,10 +12,10 @@ body {
 
 .container {
     background-color: #fff;
-    padding: 30px 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    max-width: 750px;
+    padding: 40px 50px; /* Increased padding */
+    border-radius: 15px; /* Softer corners */
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
+    max-width: 800px; /* Slightly wider container */
     width: 90%;
     text-align: center;
     box-sizing: border-box;
@@ -23,127 +23,137 @@ body {
 
 .heading {
     color: #0056b3;
-    margin-bottom: 30px;
-    font-size: 2.2em;
+    margin-bottom: 35px;
+    font-size: 2.5em; /* Slightly larger */
     font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
 }
 
 .page {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .page h2 {
     color: #0056b3;
-    margin-bottom: 25px;
-    font-size: 1.8em;
+    margin-bottom: 30px;
+    font-size: 2em; /* Slightly larger */
+    text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.08); /* Subtle text shadow */
 }
 
 .page p {
     font-size: 1.1em;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     color: #555;
 }
 
 .button {
     background-color: #007bff;
     color: white;
-    padding: 12px 25px;
+    padding: 14px 30px; /* Larger padding */
     border: none;
-    border-radius: 6px;
+    border-radius: 8px; /* Softer corners */
     cursor: pointer;
-    font-size: 1.05em;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin: 8px;
-    min-width: 120px;
+    font-size: 1.1em; /* Slightly larger text */
+    font-weight: 600; /* Bolder text */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin: 10px;
+    min-width: 140px; /* Wider buttons */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2); /* Subtle button shadow */
 }
 
 .button:hover {
     background-color: #0056b3;
-    transform: translateY(-2px);
+    transform: translateY(-3px); /* More pronounced lift */
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
 }
 
 .button:active {
     transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
 }
 
 .button:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
 }
 
 .navigation-buttons {
-    margin-top: 30px;
+    margin-top: 35px;
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 20px; /* Increased gap */
 }
 
 .prev-button {
     background-color: #6c757d;
+    box-shadow: 0 4px 10px rgba(108, 117, 125, 0.2);
 }
 
 .prev-button:hover {
     background-color: #5a6268;
+    box-shadow: 0 6px 15px rgba(108, 117, 125, 0.3);
 }
 
 .answer-options {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 12px; /* Increased gap */
+    margin-top: 25px;
 }
 
 .answer-option {
     background-color: #f8f9fa;
-    padding: 15px 20px;
-    border-radius: 8px;
+    padding: 18px 25px; /* Larger padding */
+    border-radius: 10px; /* Softer corners */
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
     border: 1px solid #ced4da;
     text-align: left;
-    font-size: 1em;
+    font-size: 1.05em; /* Slightly larger text */
     color: #495057;
 }
 
 .answer-option:hover {
     background-color: #e2e6ea;
     border-color: #b8c1cb;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1); /* More pronounced shadow */
+    transform: translateY(-3px); /* More pronounced lift */
 }
 
 .answer-option.selected {
     background-color: #28a745; /* Green for selected */
     color: white;
     border-color: #28a745;
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4); /* Stronger shadow */
     transform: translateY(-2px);
 }
 
 .radio-label {
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 18px; /* Increased margin */
     font-size: 1.1em;
     text-align: left;
-    padding-left: 50px; /* Adjust for radio button */
+    padding-left: 55px; /* Adjusted for larger radio button */
     position: relative;
 }
 
 .radio-input {
-    margin-right: 10px;
-    transform: scale(1.3);
+    margin-right: 12px; /* Increased margin */
+    transform: scale(1.4); /* Slightly larger radio button */
     position: absolute;
-    left: 20px;
+    left: 25px; /* Adjusted position */
     top: 50%;
-    transform: translateY(-50%) scale(1.3);
+    transform: translateY(-50%) scale(1.4);
 }
 
 .select-field {
-    padding: 10px 15px;
-    border-radius: 6px;
+    padding: 12px 18px; /* Larger padding */
+    border-radius: 8px; /* Softer corners */
     border: 1px solid #ced4da;
-    font-size: 1em;
-    width: 180px;
+    font-size: 1.05em;
+    width: 200px; /* Wider select field */
     text-align: center;
     background-color: #f8f9fa;
 }
@@ -153,23 +163,20 @@ body {
 }
 
 /* Results Table Styling */
-#scores-table-container {
-    margin-top: 30px;
-    margin-bottom: 25px;
-    overflow-x: auto; /* Ensures responsiveness for small screens */
-}
-
 .results-table {
     width: 100%;
-    border-collapse: collapse;
-    margin: 0 auto;
+    border-collapse: separate; /* Use separate for border-radius */
+    border-spacing: 0; /* Remove space between borders */
+    margin: 20px auto; /* Adjust margin */
     background-color: #ffffff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Softer shadow */
+    border-radius: 10px; /* Softer edges for the table */
+    overflow: hidden; /* Ensures border-radius is applied */
 }
 
 .results-table th, .results-table td {
     border: 1px solid #e9ecef;
-    padding: 12px 15px;
+    padding: 15px 20px; /* Increased padding */
     text-align: left;
 }
 
@@ -178,7 +185,16 @@ body {
     color: white;
     font-weight: 600;
     text-transform: uppercase;
-    font-size: 0.9em;
+    font-size: 0.95em; /* Slightly larger */
+    border-bottom: 2px solid #0056b3; /* Stronger bottom border */
+}
+
+.results-table thead th:first-child {
+    border-top-left-radius: 10px; /* Rounded top-left corner */
+}
+
+.results-table thead th:last-child {
+    border-top-right-radius: 10px; /* Rounded top-right corner */
 }
 
 .results-table tbody tr:nth-child(even) {
@@ -187,6 +203,8 @@ body {
 
 .results-table tbody tr:hover {
     background-color: #e9f5ff;
+    transform: translateY(-1px); /* Subtle hover effect */
+    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.1);
 }
 
 .results-table td:first-child {
@@ -194,17 +212,23 @@ body {
     color: #343a40;
 }
 
+/* New: Subscale Score Item Hover */
+.subscale-score-item:hover {
+    background-color: #e9f5ff; /* Highlight on hover */
+}
+
+
 /* Disclaimer Styling */
 .disclaimer {
-    margin-top: 40px;
-    padding: 20px;
+    margin-top: 50px; /* More space */
+    padding: 25px; /* Larger padding */
     background-color: #fff3cd; /* Light warning yellow */
     border: 1px solid #ffeeba;
-    border-radius: 8px;
+    border-radius: 10px; /* Softer corners */
     color: #856404; /* Darker yellow text */
-    font-size: 0.9em;
+    font-size: 0.95em; /* Slightly larger text */
     text-align: left;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 .disclaimer strong {
@@ -262,41 +286,44 @@ body {
     position: relative;
     width: 90%;
     max-width: 500px;
-    height: 20px;
+    height: 25px; /* Slightly taller slider */
     background-color: #e0e0e0;
-    border-radius: 10px;
-    margin: 20px auto;
+    border-radius: 12px; /* Softer corners */
+    margin: 25px auto; /* Adjusted margin */
     display: flex;
     align-items: center;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1); /* Subtle inner shadow for depth */
 }
 
 .slider-fill {
     height: 100%;
     width: 0%; /* Controlled by JS */
-    border-radius: 10px;
+    border-radius: 12px; /* Match slider radius */
     transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
     position: absolute;
     left: 0;
+    border: 1px solid rgba(0, 0, 0, 0.05); /* Subtle border */
 }
 
 .slider-thumb {
     position: absolute;
-    width: 40px;
-    height: 40px;
+    width: 45px; /* Slightly larger */
+    height: 45px; /* Slightly larger */
     border-radius: 50%;
     background-color: #ffffff;
-    border: 3px solid #ccc;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    border: 4px solid #ccc; /* Thicker border */
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3); /* More pronounced shadow */
     transition: left 0.5s ease-in-out, border-color 0.5s ease-in-out;
     transform: translateX(-50%); /* Center the thumb */
 }
 
 .anxiety-level-text {
-    margin-top: 25px;
-    font-size: 1.3em;
-    font-weight: 600;
+    margin-top: 30px; /* Adjusted margin */
+    font-size: 1.4em; /* Slightly larger text */
+    font-weight: 700; /* Bolder text */
     color: #333;
     transition: color 0.5s ease-in-out;
+    text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.05); /* Subtle text shadow */
 }
 
 /* Color classes for different anxiety levels */
