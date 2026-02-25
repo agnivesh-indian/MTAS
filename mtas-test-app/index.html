@@ -57,37 +57,8 @@
 
         <div id="results-page" class="page hidden">
             <h2>Test Results</h2>
-            <div id="scores-table-container">
-                <table id="scores-table" class="results-table">
-                    <thead>
-                        <tr>
-                            <th>Metric</th>
-                            <th>Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Total Test Anxiety Score</td>
-                            <td id="total-score"></td>
-                        </tr>
-                        <tr>
-                            <td>Worry Subscale</td>
-                            <td id="worry-score"></td>
-                        </tr>
-                        <tr>
-                            <td>Cognitive Interference Subscale</td>
-                            <td id="cognitive-interference-score"></td>
-                        </tr>
-                        <tr>
-                            <td>Tension Subscale</td>
-                            <td id="tension-score"></td>
-                        </tr>
-                        <tr>
-                            <td>Physiological Indicators Subscale</td>
-                            <td id="physiological-indicators-score"></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div id="total-score-display" class="total-score-display">
+                Total Test Anxiety Score: <span id="total-score"></span>
             </div>
             <div id="anxiety-slider-container" class="anxiety-slider-container">
                 <h3>Test Anxiety Level</h3>
@@ -96,6 +67,35 @@
                     <div id="slider-thumb" class="slider-thumb"></div>
                 </div>
                 <div id="anxiety-level-text" class="anxiety-level-text"></div>
+            </div>
+            <div id="subscale-scores-container" class="subscale-scores-container">
+                <h3>Subscale Scores</h3>
+                <table id="subscale-scores-table" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Subscale</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Worry</td>
+                            <td id="worry-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Cognitive Interference</td>
+                            <td id="cognitive-interference-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Tension</td>
+                            <td id="tension-score"></td>
+                        </tr>
+                        <tr>
+                            <td>Physiological Indicators</td>
+                            <td id="physiological-indicators-score"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <button id="restart-test" class="button">Restart Test</button>
             <div class="disclaimer">

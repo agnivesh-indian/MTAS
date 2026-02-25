@@ -150,8 +150,10 @@ function showResults() {
 
     const calculated = calculateScores();
 
-    // Populate table cells with results
+    // Populate total score
     document.getElementById('total-score').textContent = calculated.totalScore;
+
+    // Populate subscale scores
     document.getElementById('worry-score').textContent = calculated.worryScore;
     document.getElementById('cognitive-interference-score').textContent = calculated.cognitiveInterferenceScore;
     document.getElementById('tension-score').textContent = calculated.tensionScore;
@@ -161,11 +163,16 @@ function showResults() {
 }
 
 function updateAnxietySlider(totalScore) {
-    const minScore = 16; // 16 questions * 1 (min score per question)
-    const maxScore = 80;  // 16 questions * 5 (max score per question)
+    const minScore = 0; // Slider range 0-80 as requested
+    const maxScore = 80;  // Slider range 0-80 as requested
     const scoreRange = maxScore - minScore;
 
-    const normalizedScore = (totalScore - minScore) / scoreRange; // 0 to 1
+    // Ensure totalScore is within the actual MTAS range for accurate representation if it goes below 16
+    const actualMinMTASScore = 16;
+    const clampedTotalScore = Math.max(actualMinMTASScore, Math.min(totalScore, maxScore));
+
+
+    const normalizedScore = (clampedTotalScore - minScore) / scoreRange; // 0 to 1
 
     const sliderFill = document.getElementById('slider-fill');
     const sliderThumb = document.getElementById('slider-thumb');
@@ -180,13 +187,13 @@ function updateAnxietySlider(totalScore) {
     let level = '';
     let colorClass = '';
 
-    if (totalScore <= 32) { // Roughly bottom 25%
+    if (clampedTotalScore <= 20) { // Roughly bottom 25% of 0-80 scale
         level = 'Very Low Anxiety';
         colorClass = 'level-very-low';
-    } else if (totalScore <= 48) { // Roughly 25%-50%
+    } else if (clampedTotalScore <= 40) { // Roughly 25%-50%
         level = 'Low Anxiety';
         colorClass = 'level-low';
-    } else if (totalScore <= 64) { // Roughly 50%-75%
+    } else if (clampedTotalScore <= 60) { // Roughly 50%-75%
         level = 'Moderate Anxiety';
         colorClass = 'level-moderate';
     } else { // Top 25%

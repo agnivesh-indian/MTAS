@@ -211,6 +211,38 @@ body {
     color: #856404;
 }
 
+/* Total Score Display Styling */
+.total-score-display {
+    margin-top: 25px;
+    margin-bottom: 30px;
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #0056b3; /* Primary blue for prominence */
+    padding: 10px 15px;
+    background-color: #e9f5ff; /* Light background for highlight */
+    border-radius: 8px;
+    display: inline-block; /* To contain background and padding */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.total-score-display span {
+    color: #d9534f; /* A contrasting color for the score value itself */
+    font-size: 1.2em; /* Make the score number slightly larger */
+    margin-left: 10px;
+}
+
+/* Subscale Scores Container Styling */
+.subscale-scores-container {
+    margin-top: 40px;
+    margin-bottom: 25px;
+}
+
+.subscale-scores-container h3 {
+    color: #0056b3;
+    margin-bottom: 25px;
+    font-size: 1.5em;
+}
+
 /* Anxiety Slider Styling */
 .anxiety-slider-container {
     margin-top: 40px;
