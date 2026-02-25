@@ -45,11 +45,6 @@ const MTAS_DATA = {
     }
 };
 
-console.log('MTAS_DATA.percentile_male length:', MTAS_DATA.percentile_male.length);
-console.log('MTAS_DATA.zscore_male length:', MTAS_DATA.zscore_male.length);
-console.log('MTAS_DATA.percentile_female length:', MTAS_DATA.percentile_female.length);
-console.log('MTAS_DATA.zscore_female length:', MTAS_DATA.zscore_female.length);
-
 /**
  * SCORING LOGIC
  */
@@ -93,11 +88,14 @@ function scoreMTAS(age, gender, responses) {
             console.log(`Male Lookup - percentile_male[${rIdx}]:`, malePercentileRow);
             console.log(`Male Lookup - zscore_male[${rIdx}]:`, maleZscoreRow);
 
-            if (malePercentileRow && maleZscoreRow) {
+            if (Array.isArray(malePercentileRow) && Array.isArray(maleZscoreRow)) {
                  percentile = malePercentileRow[aIdx];
                  zScore = maleZscoreRow[aIdx];
+                 if (percentile === undefined || zScore === undefined) {
+                     console.warn(`Male Lookup - aIdx ${aIdx} is out of bounds for the retrieved row data.`);
+                 }
             } else {
-                 console.warn(`Male Lookup - Data row for rIdx ${rIdx} is undefined or null.`);
+                 console.warn(`Male Lookup - Data row for rIdx ${rIdx} is not an array or is undefined/null.`);
             }
         } else {
             const femalePercentileRow = MTAS_DATA.percentile_female[rIdx];
@@ -105,17 +103,21 @@ function scoreMTAS(age, gender, responses) {
             console.log(`Female Lookup - percentile_female[${rIdx}]:`, femalePercentileRow);
             console.log(`Female Lookup - zscore_female[${rIdx}]:`, femaleZscoreRow);
 
-            if (femalePercentileRow && femaleZscoreRow) {
+            if (Array.isArray(femalePercentileRow) && Array.isArray(femaleZscoreRow)) {
                  percentile = femalePercentileRow[aIdx];
                  zScore = femaleZscoreRow[aIdx];
+                 if (percentile === undefined || zScore === undefined) {
+                     console.warn(`Female Lookup - aIdx ${aIdx} is out of bounds for the retrieved row data.`);
+                 }
             } else {
-                 console.warn(`Female Lookup - Data row for rIdx ${rIdx} is undefined or null.`);
+                 console.warn(`Female Lookup - Data row for rIdx ${rIdx} is not an array or is undefined/null.`);
             }
         }
     } catch (e) {
         console.error("Error looking up percentile or z-score:", e);
         // Keep as N/A
     }
+
 
 
 
