@@ -140,15 +140,15 @@ function showResults() {
     const calculated = calculateScores();
     const scoringResults = scoreMTAS(userAge, userGender, userResponses);
 
+    // Populate table cells with results
     document.getElementById('total-score').textContent = calculated.totalScore;
     document.getElementById('worry-score').textContent = calculated.worryScore;
     document.getElementById('cognitive-interference-score').textContent = calculated.cognitiveInterferenceScore;
     document.getElementById('tension-score').textContent = calculated.tensionScore;
     document.getElementById('physiological-indicators-score').textContent = calculated.physiologicalIndicatorsScore;
-
-    document.getElementById('percentile-score').textContent = `Percentile Rank: ${scoringResults.percentile}`;
-    document.getElementById('z-score').textContent = `Standardized Z-Score: ${scoringResults.zScore}`;
-    document.getElementById('bayesian-score').textContent = `Clinical Status (Bayesian): ${scoringResults.status}`;
+    document.getElementById('percentile-score').textContent = scoringResults.percentile;
+    document.getElementById('z-score').textContent = scoringResults.zScore;
+    document.getElementById('bayesian-score').textContent = scoringResults.status;
 }
 
 // Event Listeners
