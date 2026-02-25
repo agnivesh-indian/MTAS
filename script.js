@@ -138,6 +138,7 @@ function calculateScores() {
 function showResults() {
     showPage(resultsPage);
     const calculated = calculateScores();
+    const scoringResults = scoreMTAS(userAge, userGender, userResponses);
 
     document.getElementById('total-score').textContent = calculated.totalScore;
     document.getElementById('worry-score').textContent = calculated.worryScore;
@@ -145,10 +146,9 @@ function showResults() {
     document.getElementById('tension-score').textContent = calculated.tensionScore;
     document.getElementById('physiological-indicators-score').textContent = calculated.physiologicalIndicatorsScore;
 
-    // Placeholder for advanced scoring
-    document.getElementById('percentile-score').textContent = 'Percentile Rank: (To be implemented)';
-    document.getElementById('z-score').textContent = 'Standardized Z-Score: (To be implemented)';
-    document.getElementById('bayesian-score').textContent = 'Bayesian Score: (To be implemented)';
+    document.getElementById('percentile-score').textContent = `Percentile Rank: ${scoringResults.percentile}`;
+    document.getElementById('z-score').textContent = `Standardized Z-Score: ${scoringResults.zScore}`;
+    document.getElementById('bayesian-score').textContent = `Clinical Status (Bayesian): ${scoringResults.status}`;
 }
 
 // Event Listeners
