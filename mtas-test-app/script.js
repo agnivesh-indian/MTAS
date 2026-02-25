@@ -149,12 +149,6 @@ function showResults() {
     }
 
     const calculated = calculateScores();
-    const scoringResults = scoreMTAS(userAge, userGender, userResponses);
-
-    if (scoringResults.error) {
-        alert("Scoring Error: " + scoringResults.error);
-        return; // Stop processing if there's an error
-    }
 
     // Populate table cells with results
     document.getElementById('total-score').textContent = calculated.totalScore;
@@ -162,9 +156,53 @@ function showResults() {
     document.getElementById('cognitive-interference-score').textContent = calculated.cognitiveInterferenceScore;
     document.getElementById('tension-score').textContent = calculated.tensionScore;
     document.getElementById('physiological-indicators-score').textContent = calculated.physiologicalIndicatorsScore;
-    document.getElementById('percentile-score').textContent = scoringResults.percentile !== undefined ? scoringResults.percentile : 'N/A';
-    document.getElementById('z-score').textContent = scoringResults.zScore !== undefined ? scoringResults.zScore : 'N/A';
-    document.getElementById('bayesian-score').textContent = scoringResults.status !== undefined ? scoringResults.status : 'N/A';
+
+    updateAnxietySlider(calculated.totalScore);
+}
+
+function updateAnxietySlider(totalScore) {
+    const minScore = 16; // 16 questions * 1 (min score per question)
+    const maxScore = 80;  // 16 questions * 5 (max score per question)
+    const scoreRange = maxScore - minScore;
+
+    const normalizedScore = (totalScore - minScore) / scoreRange; // 0 to 1
+
+    const sliderFill = document.getElementById('slider-fill');
+    const sliderThumb = document.getElementById('slider-thumb');
+    const anxietyLevelText = document.getElementById('anxiety-level-text');
+
+    // Calculate position for the thumb and fill width
+    // We want the slider to visually represent the anxiety level
+    const fillPercentage = normalizedScore * 100;
+    sliderFill.style.width = `${fillPercentage}%`;
+    sliderThumb.style.left = `calc(${fillPercentage}% - 10px)`; // Adjust 10px for half thumb width
+
+    let level = '';
+    let colorClass = '';
+
+    if (totalScore <= 32) { // Roughly bottom 25%
+        level = 'Very Low Anxiety';
+        colorClass = 'level-very-low';
+    } else if (totalScore <= 48) { // Roughly 25%-50%
+        level = 'Low Anxiety';
+        colorClass = 'level-low';
+    } else if (totalScore <= 64) { // Roughly 50%-75%
+        level = 'Moderate Anxiety';
+        colorClass = 'level-moderate';
+    } else { // Top 25%
+        level = 'High Anxiety';
+        colorClass = 'level-high';
+    }
+
+    anxietyLevelText.textContent = level;
+    // Remove all level classes before adding the new one
+    sliderFill.classList.remove('level-very-low', 'level-low', 'level-moderate', 'level-high');
+    sliderThumb.classList.remove('level-very-low', 'level-low', 'level-moderate', 'level-high');
+    anxietyLevelText.classList.remove('level-very-low', 'level-low', 'level-moderate', 'level-high');
+
+    sliderFill.classList.add(colorClass);
+    sliderThumb.classList.add(colorClass);
+    anxietyLevelText.classList.add(colorClass);
 }
 
 // Event Listeners
