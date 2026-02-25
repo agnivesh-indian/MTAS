@@ -87,14 +87,12 @@ function scoreMTAS(age, gender, responses) {
 
 
     // 3. Clinical Status (Based on Bayesian sheet)
-    let status = "Average";
-    if (typeof zScore === 'number') { // Only determine status if zScore is a number
-        if (zScore > 2.0) status = "Extremely High (Priority intervention)";
-        else if (zScore > 1.5) status = "Very High";
-        else if (zScore > 1.0) status = "High";
-        else if (zScore < -1.0) status = "Low";
-    } else {
-        status = "N/A"; // Cannot determine status without a valid zScore
+    let status = "N/A"; // Default to N/A initially
+    if (typeof zScore === 'number') {
+        if (zScore < -1.0) status = "Low Test Anxiety (Lower than ~84% of peers).";
+        else if (zScore >= -1.0 && zScore <= 1.0) status = "Average Test Anxiety.";
+        else if (zScore > 1.0 && zScore <= 2.0) status = "High Test Anxiety (Top 15% of peers)."; // Adjusted to cover up to 2.0
+        else if (zScore > 2.0) status = "Very High Test Anxiety (Top 2% of peers; prioritised for intervention).";
     }
 
 
