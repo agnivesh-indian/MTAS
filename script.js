@@ -137,6 +137,17 @@ function calculateScores() {
 
 function showResults() {
     showPage(resultsPage);
+
+    // Validate if all questions have been answered
+    if (userResponses.includes(null)) {
+        alert("Please answer all questions before viewing results.");
+        // Redirect back to the last unanswered question or the beginning of questions
+        const firstNullIndex = userResponses.findIndex(response => response === null);
+        currentQuestionIndex = firstNullIndex !== -1 ? firstNullIndex : 0; // Fallback to first question
+        renderQuestion();
+        return;
+    }
+
     const calculated = calculateScores();
     const scoringResults = scoreMTAS(userAge, userGender, userResponses);
 
