@@ -1,5 +1,3 @@
-import { questions } from './src/questions.js';
-
 const MTAS_DATA = {
     bayesianNorms: [
         { "z": "-3.5", "increment": 0.1, "cumulative": 0.0 }, { "z": "-3", "increment": 0.5, "cumulative": 0.1 }, { "z": "-2.5", "increment": 1.7, "cumulative": 0.6 },
@@ -103,6 +101,11 @@ const subscaleItems = {
     physiologicalIndicators: [3, 7, 11, 15] // Indices of questions corresponding to 'physiological indicators' subscale
 };
 
+// Global variable for questions
+// Since we are reverting to a non-module setup, 'questions' will be directly available
+// from src/questions.js loaded via a script tag before this script.
+declare const questions: any; 
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- DOM Elements ---
     const introPage = document.getElementById('intro-page');
@@ -128,6 +131,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const progress = document.getElementById('progress');
     const subscaleScoresContainer = document.getElementById('subscale-scores');
 
+    // --- Debugging Logs ---
+    console.log('[DEBUG] DOMContentLoaded fired.');
+    console.log('[DEBUG] ageNextButton element:', ageNextButton);
+    console.log('[DEBUG] ageSelect element:', ageSelect);
+    console.log('[DEBUG] currentStep initially:', currentStep);
+
     // --- State Variables ---
     let currentStep = 'intro'; // 'intro', 'age', 'gender', 'questions', 'results'
     let currentQuestionIndex = 0;
@@ -148,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pageToShow.classList.add('active');
             currentStep = pageId.replace('-page', ''); 
             updateUIForStep(currentStep);
+            console.log(`[DEBUG] showPage: Switched to ${currentStep}.`);
         } else {
             console.error("Page element not found:", fullPageId); // Log fullPageId
             if (fullPageId === 'intro-page') { 
@@ -194,10 +204,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Question Handling ---
     const renderQuestion = () => {
-        if (currentQuestionIndex < questions.length) {
+        if (currentQuestionIndex < mtasQuestions.length) { // Changed questions.length to mtasQuestions.length
             if (!questionHeader || !questionText || !optionsContainer) return; 
-            questionHeader.textContent = `Question ${currentQuestionIndex + 1}/${questions.length}`;
-            questionText.textContent = questions[currentQuestionIndex].text;
+            questionHeader.textContent = `Question ${currentQuestionIndex + 1}/${mtasQuestions.length}`; // Changed questions.length to mtasQuestions.length
+            questionText.textContent = mtasQuestions[currentQuestionIndex].text; // Changed questions to mtasQuestions
             optionsContainer.innerHTML = ''; 
 
             answerOptions.forEach(option => {
@@ -236,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const updateProgressBar = () => {
         if (!progress) return;
-        const progressPercentage = ((currentQuestionIndex + 1) / questions.length) * 100;
+        const progressPercentage = ((currentQuestionIndex + 1) / mtasQuestions.length) * 100; // Changed questions.length to mtasQuestions.length
         progress.style.width = `${progressPercentage}%`;
     };
 
@@ -287,4 +297,114 @@ document.addEventListener('DOMContentLoaded', () => {
             
             <p class="profile-data">Student Profile: ${selectedAge} Year Old ${selectedGender.charAt(0).toUpperCase() + selectedGender.slice(1)}</p>
             
-            <p>Raw Total: <strong>${total}</strong> / 80
+            <p>Raw Total: <strong>${total}</strong> / 80</p>
+
+            <p>Normative Metrics: Percentile: <strong>${percentile}%</strong> | z-Score: <strong>${zScore}</strong></p>
+
+            <p id="interpretation-text">Interpretation: <strong id="interpretation-value">${status}</strong></p>
+        `;
+        showPage('results');
+    };
+
+    const advanceToNextQuestionOrResult = () => {
+        if (currentStep === 'questions') {
+            if (currentQuestionIndex < mtasQuestions.length - 1) { // Changed questions.length to mtasQuestions.length
+                currentQuestionIndex++;
+                renderQuestion();
+                updateProgressBar();
+                updateNavigationButtons();
+                questionText.style.transition = 'none';
+                questionText.style.opacity = '0.7';
+                setTimeout(() => {
+                    questionText.style.transition = 'opacity 0.3s ease';
+                    questionText.style.opacity = '1';
+                }, 50);
+            } else {
+                // showResults is not defined, removed this line.
+                renderResults();
+            }
+        } else {
+            goToNextStep();
+        }
+    };
+
+    const goToPrevStep = () => {
+        switch(currentStep) {
+            case 'questions':
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    renderQuestion();
+                    updateProgressBar();
+                    updateNavigationButtons();
+                    optionsContainer.querySelectorAll('.option-label').forEach(lbl => {
+                        lbl.style.backgroundColor = '#f8f9fa'; 
+                    });
+                } else { 
+                    showPage('gender-selection');
+                }
+                break;
+            case 'gender':
+                showPage('age-selection');
+                break;
+            case 'age-selection': // Corrected from 'age'
+                showPage('intro');
+                break;
+        }
+    };
+
+    const goToNextStep = () => {
+        console.log(`[DEBUG] goToNextStep: currentStep is ${currentStep}`);
+        switch(currentStep) {
+            case 'intro':
+                showPage('age-selection');
+                break;
+            case 'age-selection': // Corrected from 'age'
+                console.log(`[DEBUG] goToNextStep: Executing case 'age-selection'. ageSelect value: ${ageSelect.value}`);
+                selectedAge = parseInt(ageSelect.value, 10); 
+                showPage('gender-selection');
+                break;
+            case 'gender':
+                selectedGender = document.querySelector('input[name="gender"]:checked')?.value || 'male'; 
+                currentQuestionIndex = 0;
+                scores = Array(mtasQuestions.length).fill(0); // Changed questions.length to mtasQuestions.length
+                renderQuestion();
+                updateProgressBar();
+                updateNavigationButtons();
+                showPage('question');
+                break;
+        }
+    };
+
+    const resetTest = () => {
+        scores = Array(mtasQuestions.length).fill(0); // Changed questions.length to mtasQuestions.length
+        currentQuestionIndex = 0;
+        selectedAge = parseInt(ageSelect.value, 10); 
+        selectedGender = document.querySelector('input[name="gender"]:checked')?.value || 'male'; 
+        // showResults is not defined, removed this line.
+        
+        showPage('intro');
+    };
+
+    // --- Event Listeners ---
+    if (startButton) startButton.addEventListener('click', () => { console.log('[DEBUG] Start button clicked.'); goToNextStep(); });
+    if (ageNextButton) ageNextButton.addEventListener('click', () => { console.log('[DEBUG] Age Next button clicked.'); goToNextStep(); });
+    if (genderNextButton) genderNextButton.addEventListener('click', () => { console.log('[DEBUG] Gender Next button clicked.'); goToNextStep(); });
+    if (genderPrevButton) genderPrevButton.addEventListener('click', () => { console.log('[DEBUG] Gender Prev button clicked.'); goToPrevStep(); });
+    if (questionPrevButton) questionPrevButton.addEventListener('click', () => { console.log('[DEBUG] Question Prev button clicked.'); goToPrevStep(); });
+    if (takeAgainButton) takeAgainButton.addEventListener('click', resetTest);
+    
+    if (optionsContainer) optionsContainer.addEventListener('change', handleAnswerSelect);
+    if (ageSelect) ageSelect.addEventListener('change', handleAgeChange);
+
+    genderRadios.forEach(radio => {
+        radio.addEventListener('change', handleGenderChange);
+    });
+
+    // --- Initial Setup ---
+    if (ageSelect) selectedAge = parseInt(ageSelect.value, 10);
+    const initialGenderRadio = document.querySelector('input[name="gender"]:checked');
+    if (initialGenderRadio) selectedGender = initialGenderRadio.value || 'male';
+    else selectedGender = 'male'; 
+    
+    showPage('intro');
+});

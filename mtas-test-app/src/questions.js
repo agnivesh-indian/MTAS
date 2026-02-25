@@ -1,4 +1,4 @@
-export const questions = [
+const mtasQuestions = [
   { text: "Before a test/exam, I am worried I will fail.", score: 0 },
   { text: "I forget previously known material before taking a test/exam.", score: 0 },
   { text: "Even when I have prepared for a test/exam I feel nervous about it.", score: 0 },
